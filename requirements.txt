@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 opencv-python
 streamlit
 paho-mqtt
@@ -10,16 +9,3 @@ scikit-learn
 openvino
 flask
 requests
-=======
-opencv-python
-streamlit
-paho-mqtt
-pyserial
-numpy
-matplotlib
-pandas
-scikit-learn
-openvino
-flask
-requests
->>>>>>> Stashed changes
