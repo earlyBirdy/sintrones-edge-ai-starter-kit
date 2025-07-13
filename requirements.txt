@@ -1,0 +1,11 @@
+opencv-python
+streamlit
+paho-mqtt
+pyserial
+numpy
+matplotlib
+pandas
+scikit-learn
+openvino
+flask
+requests
