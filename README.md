@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 # 📦 Sintrones Edge AI Starter Kit
 
 > **“Edge AI Vision + Sensor Gateway” for Vehicle / Factory / City Use**
@@ -192,4 +191,4 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 ## 📄 License
 
 MIT License — open for research, testing, and pilot deployment.
->>>>>>> Stashed changes
+
