@@ -181,7 +181,7 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 ## 📢 Community & Contact
 
 - [Website](https://www.sintrones.com)
-- [LinkedIn](https://www.linkedin.com/company/sintrones/)
+- [LinkedIn](https://www.linkedin.com/company/sintrones-technology-corp)
 - [Edge AI Community (Coming soon)](#)
 
 📬 Want a hardware demo kit? [Contact Sintrones](https://www.sintrones.com/contact/)
