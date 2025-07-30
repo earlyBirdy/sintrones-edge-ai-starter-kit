@@ -13,6 +13,7 @@ This open-source project demonstrates how to deploy real-time AI object detectio
 - 📊 Display data and AI results via Streamlit or Grafana dashboard
 - 🔌 Communicate via **MQTT**, **Modbus**, or **CANBus**
 - 📡 Optional integration of **5G modules + GPS** for mobile/vehicular use
+- 🔄 Built-in OTA update agent for field-deployed upgrades
 
 ---
 
