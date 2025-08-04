@@ -81,8 +81,8 @@ sintrones-edge-ai-starter-kit/
 
 ## 📚 Additional Resources
 
-- 📘 [Use Cases](USE_CASES.md): Real-world Edge AI applications in factories, vehicles, and smart cities  
-- 🤝 [Contributing Guide](CONTRIBUTING.md): How to get involved and contribute to this project
+- 📘 [Use Cases](/docs/USE_CASES.md): Real-world Edge AI applications in factories, vehicles, and smart cities  
+- 🤝 [Contributing Guide](/docs/CONTRIBUTING.md): How to get involved and contribute to this project
 
 ---
 
@@ -110,5 +110,6 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 ## 📄 License
 
 MIT License — open for research, testing, and pilot deployment.
+
 
 
