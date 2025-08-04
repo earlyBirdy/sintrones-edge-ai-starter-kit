@@ -1,20 +1,16 @@
 import streamlit as st
 import random
 
-st.set_page_config(page_title="Factory Automation Dashboard")
+st.set_page_config(page_title="Factory Monitoring Dashboard")
+st.title("🏭 Factory Edge AI Dashboard")
 
-st.title("🏭 Factory Automation Monitoring")
-st.subheader("Live Sensor Data")
+temperature = round(random.uniform(60, 90), 2)
+vibration = round(random.uniform(0.01, 0.2), 3)
 
-# Simulated data
-temp = random.uniform(60, 90)
-vibration = random.uniform(0.01, 0.2)
+st.metric("Temperature (°C)", temperature)
+st.metric("Vibration (g)", vibration)
 
-st.metric("Temperature (°C)", f"{temp:.2f}")
-st.metric("Vibration (g)", f"{vibration:.3f}")
-
-if temp > 75:
-    st.warning("⚠️ High temperature detected!")
-
+if temperature > 75:
+    st.warning("⚠️ Temperature exceeds safe limits!")
 if vibration > 0.15:
-    st.warning("⚠️ Abnormal vibration detected!")
+    st.warning("⚠️ High vibration detected!")
