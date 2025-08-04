@@ -1,4 +1,6 @@
-# Main application entry point
+# Main entry point
+def main():
+    print("Starting Sintrones Edge AI Gateway...")
 
-if __name__ == '__main__':
-    print('Edge AI Gateway running')
+if __name__ == "__main__":
+    main()
