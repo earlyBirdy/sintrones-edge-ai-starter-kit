@@ -1,3 +1,3 @@
-# Basic anomaly detection
-def detect_anomaly(data):
-    return data['temperature'] > 75 or data['vibration'] > 0.15
+# Dummy model for demonstration
+def detect_anomaly(sensor_data):
+    return sensor_data.get("temperature", 0) > 75 or sensor_data.get("vibration", 0) > 0.15
