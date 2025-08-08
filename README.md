@@ -25,7 +25,7 @@ sintrones-edge-ai-starter-kit/
 ├── sensor_drivers/        # CANbus, Modbus, GPIO, MQTT handlers
 ├── dashboard/             # Streamlit and Grafana dashboard configs
 ├── docker/                # Dockerfile + docker-compose.yml
-├── src/                   # Core application logic
+├── app/                   # Core application logic
 │   └── main.py
 ├── ota/                   # OTA update agent and JSON control
 ├── configs/               # System & sensor configuration files
