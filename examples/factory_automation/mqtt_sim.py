@@ -1,16 +1,18 @@
+# ADD THIS instead of the top-level while True loop
 import paho.mqtt.client as mqtt
-import time
-import json
-import random
+import time, json, random
 
-client = mqtt.Client()
-client.connect("localhost", 1883, 60)
+def run_simulation(broker="localhost", port=1883, topic="factory/sensor", interval=3):
+    client = mqtt.Client()
+    client.connect(broker, port, 60)
+    while True:
+        data = {
+            "temperature": round(random.uniform(65, 85), 2),
+            "vibration": round(random.uniform(0.01, 0.2), 3)
+        }
+        client.publish(topic, json.dumps(data))
+        print("[MQTT] Published:", data)
+        time.sleep(interval)
 
-while True:
-    data = {
-        "temperature": round(random.uniform(65, 85), 2),
-        "vibration": round(random.uniform(0.01, 0.2), 3)
-    }
-    client.publish("factory/sensor", json.dumps(data))
-    print("Published:", data)
-    time.sleep(3)
+if __name__ == "__main__":
+    run_simulation()
