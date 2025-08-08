@@ -1,16 +1,18 @@
-# Factory Automation Example
-# Reads sensor data and applies basic inference or alerts
+# Create a monitor loop the runtime can call
+import time
+from . import modbus_sim
+from src.model import detect_anomaly
 
-def read_sensor():
-    # Simulated Modbus or GPIO reading
-    return {"temp": 78.3, "vibration": 0.08}
-
-def process_data(sensor_data):
-    if sensor_data["temp"] > 75:
-        return "Warning: High temperature detected"
-    return "System normal"
+def run_monitor(poll=2):
+    print("[MONITOR] Starting factory monitor loop…")
+    while True:
+        data = modbus_sim.read_sensor()   # {"temperature":..,"vibration":..}
+        bad = detect_anomaly(data)        # uses your model stub
+        if bad:
+            print(f"[ALERT] Anomaly: {data}")
+        else:
+            print(f"[OK] {data}")
+        time.sleep(poll)
 
 if __name__ == "__main__":
-    sensor_data = read_sensor()
-    status = process_data(sensor_data)
-    print(status)
+    run_monitor()
