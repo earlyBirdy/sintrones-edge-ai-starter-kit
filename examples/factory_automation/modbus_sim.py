@@ -1,5 +1,5 @@
-import time
-import random
+# Keep read_sensor(), and ADD:
+import time, random
 
 def read_sensor():
     return {
@@ -7,7 +7,10 @@ def read_sensor():
         "vibration": round(random.uniform(0.01, 0.2), 3)
     }
 
-if __name__ == "__main__":
+def run_simulation(interval=2):
     while True:
-        print("Sensor Reading:", read_sensor())
-        time.sleep(2)
+        print("[MODBUS] Sensor Reading:", read_sensor())
+        time.sleep(interval)
+
+if __name__ == "__main__":
+    run_simulation()
