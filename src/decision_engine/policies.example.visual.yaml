@@ -1,0 +1,9 @@
+assets:
+  lineA-cam01:
+    thresholds:
+      defects_per_frame:
+        warn: 1
+        alert: 2
+    actions:
+      alert: ["notify:quality", "create_ticket"]
+      shutdown: ["notify:safety", "trigger:plc_stop"]

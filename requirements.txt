@@ -9,3 +9,7 @@ scikit-learn
 openvino
 flask
 requests
+
+opencv-python
+onnxruntime
+paho-mqtt
