@@ -41,25 +41,6 @@ sintrones-edge-ai-starter-kit/
 
 ---
 
-## ⚡ Getting Started
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/sintrones/edge-ai-starter-kit.git
-   cd edge-ai-starter-kit
-   ```
-
-2. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the dashboard demo:**
-   ```bash
-   python app/main.py
-   ```
-
----
 
 ## 📦 Deployment Options
 
@@ -97,6 +78,87 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 
 ---
 
+## ⚡ Getting Started
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/sintrones/edge-ai-starter-kit.git
+   cd edge-ai-starter-kit
+   ```
+
+2. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the dashboard demo:**
+   ```bash
+   python app/main.py
+   ```
+
+## Vision Inspection Camera Publisher
+
+This example publishes **per-frame detections** to MQTT for the collector to ingest. It supports a real ONNX model or a mock fallback.
+
+### 1) Install dependencies
+```bash
+# Core
+python -m pip install onnxruntime opencv-python paho-mqtt
+
+# Apple Silicon (M1/M2/M3): use the silicon wheel
+# python -m pip install onnxruntime-silicon opencv-python paho-mqtt
+```
+
+### 2) Prepare a model (optional)
+If you already have an ONNX model (e.g., YOLO export), put it in `models/defect_detector.onnx`.
+
+Otherwise, generate a tiny test model (always outputs one detection):
+```bash
+python models/onnx-model-generator/generate_dummy_onnx_with_onnx.py
+# -> writes models/defect_detector.onnx
+```
+
+> **Note:** If you see an error like *Unsupported model IR version: 11, max supported IR version: 10*, either upgrade onnxruntime (`pip install --upgrade onnxruntime` or `onnxruntime-silicon`) or regenerate the model with IR=10.
+
+### 3) Run the camera publisher
+Use a webcam:
+```bash
+python examples/vision_inspection/camera_infer.py \
+  --model models/defect_detector.onnx --camera 0
+```
+Or a sample video:
+```bash
+python examples/vision_inspection/camera_infer.py \
+  --model models/defect_detector.onnx --video path/to/sample.mp4
+```
+
+If you don’t have a model yet, run the mock-fallback script (publishes synthetic detections periodically):
+```bash
+python onnx-model-generator-ready/camera_infer_mock_fallback.py --camera 0
+# or
+python onnx-model-generator-ready/camera_infer_mock_fallback.py --video path/to/sample.mp4
+```
+
+```bash
+# Collector should already be running to write JSONL
+python -m src.cli collect --config configs/config.yaml
+
+# Batch to Parquet
+python -m src.cli batch --config configs/config.yaml
+```
+
+### 4) MQTT topics (default)
+- `factory/vision/detections` – raw detections (per frame)
+- `factory/vision/events` – filtered/decided events (if you wire through decision engine)
+
+### 5) Troubleshooting
+- **Model not found**: ensure `models/defect_detector.onnx` exists or pass an absolute path with `--model`.
+- **Unsupported IR version**: upgrade `onnxruntime` or re-generate model with IR=10.
+- **No camera**: use `--video` with a test clip.
+- **Broker connection**: start Mosquitto locally or point to your broker in `examples/vision_inspection/camera_infer.py` (MQTT_HOST/PORT).
+
+---
+
 ## 📢 Community & Contact
 
 - [Website](https://www.sintrones.com)
@@ -110,6 +172,3 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 ## 📄 License
 
 MIT License — open for research, testing, and pilot deployment.
-
-
-
