@@ -1,0 +1,12 @@
+mqtt:
+  host: "localhost"
+  port: 1883
+  topic: "factory/health/#"
+
+recovery:
+  timeout_sec: 30
+  actions:
+    lineA-press01:
+      shell: "echo 'Restarting edge runtime for lineA-press01'"
+    default:
+      shell: "echo 'Notify operator: heartbeat timeout'"
