@@ -20,8 +20,6 @@ This open-source project demonstrates how to deploy real-time AI object detectio
   - 📦 *Release Agent* runs `tools/healthcheck.py` and drafts `dist/release_notes.md`.
 - **Vision Inspection**: camera publisher sample and ONNX dummy model generator.
 - **Healthcheck Tool**: `tools/healthcheck.py` to verify syntax, deps, and structure.
-- **Repo Stubs**: minimal `src/collector.py`, `src/batcher.py`, `src/cli.py`, `src/decision_engine/engine.py`, and `configs/config.yaml` to match README structure.
-- **MQTT Quick Start**: run Mosquitto locally or via Docker for fast testing.
 
 ---
 
@@ -295,3 +293,4 @@ python -m src.cli batch --config configs/config.yaml
 ## 📄 License
 
 MIT License — open for research, testing, and pilot deployment.
+
