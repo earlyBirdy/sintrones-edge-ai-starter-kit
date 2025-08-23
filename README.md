@@ -28,30 +28,6 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 
 ---
 
-## 🛠️ Project Structure
-
-```
-sintrones-edge-ai-starter-kit/
-├── ai_models/             # YOLOv5 or OpenVINO model files
-├── sensor_drivers/        # CANbus, Modbus, GPIO, MQTT handlers
-├── dashboard/             # Streamlit and Grafana dashboard configs
-├── docker/                # Dockerfile + docker-compose.yml
-├── app/                   # Core application logic
-│   └── main.py
-├── ota/                   # OTA update agent and JSON control
-├── configs/               # System & sensor configuration files
-├── examples/              # Application-specific integration (vehicle, factory, city)
-├── docs/                  # Wiring diagrams, ABOX-5220 architecture
-│   └── index.md
-├── LICENSE
-├── README.md
-├── INSTALL.md
-├── requirements.txt
-├── .gitignore
-```
-
----
-
 ## 📦 Deployment Options
 
 | Mode             | Description                                  |
@@ -74,6 +50,96 @@ sintrones-edge-ai-starter-kit/
 
 - 📘 [Use Cases](/docs/USE_CASES.md): Real-world Edge AI applications in factories, vehicles, and smart cities  
 - 🤝 [Contributing Guide](/docs/CONTRIBUTING.md): How to get involved and contribute to this project
+
+---
+
+## AI Agents Add-on
+
+This repository integrates an **AI Agents Add-on** with three useful agents to enhance reliability, adaptability, and release workflows.
+
+### 1. System Recovery Agent
+- **Purpose**: Monitors MQTT heartbeat topics (e.g., `factory/health/#`).
+- **Behavior**: If a device misses heartbeats for a configured timeout, it triggers recovery actions (e.g., restart services or notify operators).
+- **Usage**:
+  ```bash
+  python -m src.agents.system_recovery_agent --config agents/system_recovery.yaml
+  ```
+
+### 2. Adapter Auto-Gen Agent
+- **Purpose**: Inspects new devices and automatically generates adapter configuration snippets.
+- **Modes**:
+  - **MQTT sniff mode**: listens to wildcard topics and infers field mappings.
+  - **OPC UA browse mode**: enumerates nodeIds and proposes mappings.
+- **Usage**:
+  ```bash
+  # MQTT mode
+  python -m src.agents.adapter_autogen_agent --mode mqtt --host localhost --topic factory/# --samples 30 --timeout 20
+
+  # OPC UA mode
+  python -m src.agents.adapter_autogen_agent --mode opcua --endpoint opc.tcp://192.168.10.20:4840
+  ```
+
+### 3. Release Agent
+- **Purpose**: Automates readiness checks and drafts GitHub release notes.
+- **Behavior**: Runs `tools/healthcheck.py`, verifies syntax & dependencies, and generates release notes into `dist/release_notes.md`.
+- **Usage**:
+  ```bash
+  python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
+  ```
+
+### Requirements
+Install additional dependencies with:
+```bash
+python -m pip install -r requirements-addon.txt
+```
+
+### Outputs
+- **Recovery logs**: console output
+- **Auto-generated configs**: `dist/config.autogen.yaml`
+- **Release notes**: `dist/release_notes.md`
+
+For more details, see [`docs/AGENTS.md`](docs/AGENTS.md).
+
+---
+
+## 🛠️ Project Structure
+
+```
+sintrones-edge-ai-starter-kit/
+├── ai_models/             # YOLOv5 or OpenVINO model files
+├── sensor_drivers/        # CANbus, Modbus, GPIO, MQTT handlers
+├── dashboard/             # Streamlit and Grafana dashboard configs
+├── docker/                # Dockerfile + docker-compose.yml
+├── app/                   # Core application logic
+│   └── main.py
+├── ota/                   # OTA update agent and JSON control
+├── configs/               # System & sensor configuration files
+├── examples/              # Application-specific integration (vehicle, factory, city)
+├── docs/                  # Wiring diagrams, ABOX-5220 architecture
+│   └── index.md
+│   └─ AGENTS.md           # Documentation for AI Agents
+├─ src/
+│  ├─ agents/                  # AI Agents (system recovery, adapter autogen, release agent)
+│  ├─ collector.py
+│  ├─ batcher.py
+│  ├─ cli.py
+│  └─ decision_engine/
+├─ agents/                     # Agent configs (e.g., system_recovery.yaml)
+├─ tools/
+│  └─ healthcheck.py           # Repo healthcheck tool
+├─ examples/
+│  └─ vision_inspection/...
+├─ models/
+│  └─ defect_detector.onnx
+├─ dist/                       # Auto-generated configs and release notes
+├─ requirements.txt
+├─ requirements-addon.txt      # Dependencies for AI Agents
+├── LICENSE
+├── README.md
+├── INSTALL.md
+├── requirements.txt
+├── .gitignore
+```
 
 ---
 
@@ -156,26 +222,15 @@ python -m src.cli batch --config configs/config.yaml
 - **No camera**: use `--video` with a test clip.
 - **Broker connection**: start Mosquitto locally or point to your broker in `examples/vision_inspection/camera_infer.py` (MQTT_HOST/PORT).
 
----
 
-## AI Agents Add-on
+### ⚡🔧📦 AI Agents Quick-Start
 
-This repository integrates an **AI Agents Add-on** with three useful agents to enhance reliability, adaptability, and release workflows.
-
-### 1. System Recovery Agent
-- **Purpose**: Monitors MQTT heartbeat topics (e.g., `factory/health/#`).
-- **Behavior**: If a device misses heartbeats for a configured timeout, it triggers recovery actions (e.g., restart services or notify operators).
-- **Usage**:
+- ⚡ **System Recovery Agent**  
   ```bash
   python -m src.agents.system_recovery_agent --config agents/system_recovery.yaml
   ```
 
-### 2. Adapter Auto-Gen Agent
-- **Purpose**: Inspects new devices and automatically generates adapter configuration snippets.
-- **Modes**:
-  - **MQTT sniff mode**: listens to wildcard topics and infers field mappings.
-  - **OPC UA browse mode**: enumerates nodeIds and proposes mappings.
-- **Usage**:
+- 🔧 **Adapter Auto-Gen Agent**  
   ```bash
   # MQTT mode
   python -m src.agents.adapter_autogen_agent --mode mqtt --host localhost --topic factory/# --samples 30 --timeout 20
@@ -184,28 +239,13 @@ This repository integrates an **AI Agents Add-on** with three useful agents to e
   python -m src.agents.adapter_autogen_agent --mode opcua --endpoint opc.tcp://192.168.10.20:4840
   ```
 
-### 3. Release Agent
-- **Purpose**: Automates readiness checks and drafts GitHub release notes.
-- **Behavior**: Runs `tools/healthcheck.py`, verifies syntax & dependencies, and generates release notes into `dist/release_notes.md`.
-- **Usage**:
+- 📦 **Release Agent**  
   ```bash
   python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
   ```
 
-### Requirements
-Install additional dependencies with:
-```bash
-python -m pip install -r requirements-addon.txt
-```
-
-### Outputs
-- **Recovery logs**: console output
-- **Auto-generated configs**: `dist/config.autogen.yaml`
-- **Release notes**: `dist/release_notes.md`
-
-For more details, see [`docs/AGENTS.md`](docs/AGENTS.md).
-
 ---
+
 
 ## 📢 Community & Contact
 
