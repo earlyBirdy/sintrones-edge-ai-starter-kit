@@ -14,6 +14,14 @@ This open-source project demonstrates how to deploy real-time AI object detectio
 - 🔌 Communicate via **MQTT**, **Modbus**, or **CANBus**
 - 📡 Optional integration of **5G modules + GPS** for mobile/vehicular use
 - 🔄 Built-in OTA update agent for field-deployed upgrades
+- **AI Agents Add-on**:
+  - ⚡ *System Recovery Agent* monitors MQTT heartbeats and triggers recovery actions.
+  - 🔧 *Adapter Auto-Gen Agent* inspects MQTT/OPC UA and generates adapter configs.
+  - 📦 *Release Agent* runs `tools/healthcheck.py` and drafts `dist/release_notes.md`.
+- **Vision Inspection**: camera publisher sample and ONNX dummy model generator.
+- **Healthcheck Tool**: `tools/healthcheck.py` to verify syntax, deps, and structure.
+- **Repo Stubs**: minimal `src/collector.py`, `src/batcher.py`, `src/cli.py`, `src/decision_engine/engine.py`, and `configs/config.yaml` to match README structure.
+- **MQTT Quick Start**: run Mosquitto locally or via Docker for fast testing.
 
 ---
 
@@ -115,6 +123,7 @@ sintrones-edge-ai-starter-kit/
 ├── ota/                   # OTA update agent and JSON control
 ├── configs/               # System & sensor configuration files
 ├── examples/              # Application-specific integration (vehicle, factory, city)
+│  └─ vision_inspection/...
 ├── docs/                  # Wiring diagrams, ABOX-5220 architecture
 │   └── index.md
 │   └─ AGENTS.md           # Documentation for AI Agents
@@ -124,6 +133,7 @@ sintrones-edge-ai-starter-kit/
 │  ├─ batcher.py
 │  ├─ cli.py
 │  └─ decision_engine/
+│     └─ engine.py
 ├─ agents/                     # Agent configs (e.g., system_recovery.yaml)
 ├─ tools/
 │  └─ healthcheck.py           # Repo healthcheck tool
@@ -131,6 +141,8 @@ sintrones-edge-ai-starter-kit/
 │  └─ vision_inspection/...
 ├─ models/
 │  └─ defect_detector.onnx
+├─ configs/
+│  └─ config.yaml
 ├─ dist/                       # Auto-generated configs and release notes
 ├─ requirements.txt
 ├─ requirements-addon.txt      # Dependencies for AI Agents
@@ -244,8 +256,31 @@ python -m src.cli batch --config configs/config.yaml
   python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
   ```
 
----
+### MQTT Broker (Mosquitto) — Quick Run
 
+  Run locally:
+  ```bash
+  # macOS (brew)
+  brew install mosquitto
+  brew services start mosquitto
+
+  # Ubuntu/Debian
+  sudo apt update && sudo apt install -y mosquitto mosquitto-clients
+  mosquitto -v  # foreground mode with verbose logs
+  ```
+
+  Or via Docker:
+  ```bash
+  docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+  ```
+
+  Test:
+  ```bash
+  mosquitto_sub -h localhost -t "test/topic"
+  mosquitto_pub -h localhost -t "test/topic" -m "hello"
+  ```
+
+---
 
 ## 📢 Community & Contact
 
