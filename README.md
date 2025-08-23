@@ -2,7 +2,7 @@
 
 > **“Edge AI Vision + Sensor Gateway” for Vehicle / Factory / City Use**
 
-This open-source project demonstrates how to deploy real-time AI object detection, sensor data fusion, and industrial dashboards using **Sintrones rugged edge AI hardware**. It’s built for system integrators, developers, and researchers working in transportation, manufacturing, and smart infrastructure.
+This open-source project demonstrates how to deploy real-time AI object detection, sensor data fusion, and industrial dashboards using **Sintrones rugged Edge AI hardware**. It’s built for system integrators, developers, and researchers working in transportation, manufacturing, and smart infrastructure.
 
 ---
 
@@ -14,6 +14,17 @@ This open-source project demonstrates how to deploy real-time AI object detectio
 - 🔌 Communicate via **MQTT**, **Modbus**, or **CANBus**
 - 📡 Optional integration of **5G modules + GPS** for mobile/vehicular use
 - 🔄 Built-in OTA update agent for field-deployed upgrades
+
+---
+
+## 🤝 Sales + Technical Collaboration
+
+This starter kit aligns with Sintrones’ efforts to:
+- Support system integrators and OEMs with demo-ready tools
+- Collaborate on R&D and proof-of-concepts
+- Promote industrial AI adoption across SEA & global markets
+
+Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute modules!
 
 ---
 
@@ -41,7 +52,6 @@ sintrones-edge-ai-starter-kit/
 
 ---
 
-
 ## 📦 Deployment Options
 
 | Mode             | Description                                  |
@@ -64,17 +74,6 @@ sintrones-edge-ai-starter-kit/
 
 - 📘 [Use Cases](/docs/USE_CASES.md): Real-world Edge AI applications in factories, vehicles, and smart cities  
 - 🤝 [Contributing Guide](/docs/CONTRIBUTING.md): How to get involved and contribute to this project
-
----
-
-## 🤝 Sales + Technical Collaboration
-
-This starter kit aligns with Sintrones’ efforts to:
-- Support system integrators and OEMs with demo-ready tools
-- Collaborate on R&D and proof-of-concepts
-- Promote industrial AI adoption across SEA & global markets
-
-Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute modules!
 
 ---
 
@@ -156,6 +155,55 @@ python -m src.cli batch --config configs/config.yaml
 - **Unsupported IR version**: upgrade `onnxruntime` or re-generate model with IR=10.
 - **No camera**: use `--video` with a test clip.
 - **Broker connection**: start Mosquitto locally or point to your broker in `examples/vision_inspection/camera_infer.py` (MQTT_HOST/PORT).
+
+---
+
+## AI Agents Add-on
+
+This repository integrates an **AI Agents Add-on** with three useful agents to enhance reliability, adaptability, and release workflows.
+
+### 1. System Recovery Agent
+- **Purpose**: Monitors MQTT heartbeat topics (e.g., `factory/health/#`).
+- **Behavior**: If a device misses heartbeats for a configured timeout, it triggers recovery actions (e.g., restart services or notify operators).
+- **Usage**:
+  ```bash
+  python -m src.agents.system_recovery_agent --config agents/system_recovery.yaml
+  ```
+
+### 2. Adapter Auto-Gen Agent
+- **Purpose**: Inspects new devices and automatically generates adapter configuration snippets.
+- **Modes**:
+  - **MQTT sniff mode**: listens to wildcard topics and infers field mappings.
+  - **OPC UA browse mode**: enumerates nodeIds and proposes mappings.
+- **Usage**:
+  ```bash
+  # MQTT mode
+  python -m src.agents.adapter_autogen_agent --mode mqtt --host localhost --topic factory/# --samples 30 --timeout 20
+
+  # OPC UA mode
+  python -m src.agents.adapter_autogen_agent --mode opcua --endpoint opc.tcp://192.168.10.20:4840
+  ```
+
+### 3. Release Agent
+- **Purpose**: Automates readiness checks and drafts GitHub release notes.
+- **Behavior**: Runs `tools/healthcheck.py`, verifies syntax & dependencies, and generates release notes into `dist/release_notes.md`.
+- **Usage**:
+  ```bash
+  python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
+  ```
+
+### Requirements
+Install additional dependencies with:
+```bash
+python -m pip install -r requirements-addon.txt
+```
+
+### Outputs
+- **Recovery logs**: console output
+- **Auto-generated configs**: `dist/config.autogen.yaml`
+- **Release notes**: `dist/release_notes.md`
+
+For more details, see [`docs/AGENTS.md`](docs/AGENTS.md).
 
 ---
 
