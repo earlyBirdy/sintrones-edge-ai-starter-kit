@@ -1,0 +1,12 @@
+# Global configuration (stub)
+mqtt:
+  host: localhost
+  port: 1883
+
+paths:
+  data_dir: data/
+  collector_out: data/collector/events.jsonl
+  batches_dir: data/batches/
+
+decision_engine:
+  threshold: 0.8
