@@ -1,8 +1,11 @@
+
 # 📦 Sintrones Edge AI Starter Kit
 
 > **“Edge AI Vision + Sensor Gateway” for Vehicle / Factory / City Use**
 
 This open-source project demonstrates how to deploy real-time AI object detection, sensor data fusion, and industrial dashboards using **Sintrones rugged Edge AI hardware**. It’s built for system integrators, developers, and researchers working in transportation, manufacturing, and smart infrastructure.
+
+> 💡 **Sales + Collaboration**: Use this as a customer-facing PoC and R&D starter kit. Ideal for OEMs, system integrators, and smart infrastructure pilots in SEA or global deployments.
 
 ---
 
@@ -34,12 +37,28 @@ Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute m
 
 ---
 
+## 🆓 vs 💼 Commercial Version
+
+| Feature                                | Open-Source Starter Kit | Commercial Offering |
+|----------------------------------------|--------------------------|---------------------|
+| Real-time AI Inference (YOLO, etc.)    | ✅ Yes                   | ✅ Yes              |
+| Dashboard UI (Streamlit/Grafana)       | ✅ Yes                   | ✅ Yes              |
+| OTA Agent                              | ✅ Yes                   | ✅ Enhanced         |
+| Health Monitoring                      | ✅ CLI Tool              | ✅ Web Dashboard    |
+| AI Agent Automation (Recovery, Adapter)| ✅ Yes                   | ✅ Advanced         |
+| Odoo / Cloud / AWS Integration         | 🟡 Manual                | ✅ Plug-in Ready    |
+| Hardware Acceleration Support          | 🟡 Generic               | ✅ Tuned Drivers    |
+| Long-term Support + SLA                | ❌                       | ✅ Yes              |
+| Turnkey Packaging (VM/Image)           | ❌                       | ✅ Yes              |
+
+---
+
 ## 📦 Deployment Options
 
 | Mode             | Description                                  |
 |------------------|----------------------------------------------|
 | **Standalone**   | Fully offline dashboard & sensor integration |
-| **Edge-to-Cloud**| MQTT to Odoo, AWS, or other IoT platforms     |
+| **Edge-to-Cloud**| MQTT to Odoo, AWS, or other IoT platforms    |
 | **Vehicle AI**   | Add GPS/CANbus for on-road deployments       |
 
 ---
@@ -93,6 +112,16 @@ This repository integrates an **AI Agents Add-on** with three useful agents to e
   python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
   ```
 
+### 4) MQTT topics (default)
+  - `factory/vision/detections` – raw detections (per frame)
+  - `factory/vision/events` – filtered/decided events (if you wire through decision engine)
+
+### 5) Troubleshooting
+  - **Model not found**: ensure `models/defect_detector.onnx` exists or pass an absolute path with `--model`.
+  - **Unsupported IR version**: upgrade `onnxruntime` or re-generate model with IR=10.
+  - **No camera**: use `--video` with a test clip.
+  - **Broker connection**: start Mosquitto locally or point to your broker in `examples/vision_inspection/camera_infer.py` (MQTT_HOST/PORT).
+
 ### Requirements
 Install additional dependencies with:
 ```bash
@@ -112,42 +141,38 @@ For more details, see [`docs/AGENTS.md`](docs/AGENTS.md).
 
 ```
 sintrones-edge-ai-starter-kit/
+├─- agents/                # Agent configs (e.g., system_recovery.yaml)
 ├── ai_models/             # YOLOv5 or OpenVINO model files
-├── sensor_drivers/        # CANbus, Modbus, GPIO, MQTT handlers
-├── dashboard/             # Streamlit and Grafana dashboard configs
-├── docker/                # Dockerfile + docker-compose.yml
-├── app/                   # Core application logic
+├── app/                   # Core dashboard + logic
 │   └── main.py
-├── ota/                   # OTA update agent and JSON control
 ├── configs/               # System & sensor configuration files
-├── examples/              # Application-specific integration (vehicle, factory, city)
-│  └─ vision_inspection/...
+│   └─ config.yaml
+├── dashboard/             # Streamlit and Grafana dashboard configs
+├─- dist/                  # Auto-generated configs and release notes
+├── docker/                # Dockerfile + docker-compose.yml
 ├── docs/                  # Wiring diagrams, ABOX-5220 architecture
 │   └── index.md
 │   └─ AGENTS.md           # Documentation for AI Agents
-├─ src/
-│  ├─ agents/                  # AI Agents (system recovery, adapter autogen, release agent)
-│  ├─ collector.py
-│  ├─ batcher.py
-│  ├─ cli.py
-│  └─ decision_engine/
-│     └─ engine.py
-├─ agents/                     # Agent configs (e.g., system_recovery.yaml)
-├─ tools/
-│  └─ healthcheck.py           # Repo healthcheck tool
-├─ examples/
-│  └─ vision_inspection/...
-├─ models/
-│  └─ defect_detector.onnx
-├─ configs/
-│  └─ config.yaml
-├─ dist/                       # Auto-generated configs and release notes
-├─ requirements.txt
-├─ requirements-addon.txt      # Dependencies for AI Agents
-├── LICENSE
-├── README.md
+├── examples/              # Application-specific integration (vehicle, factory, city)
+│   └─ vision_inspection/...
+├─- models/
+│   └─ defect_detector.onnx
+├── ota/                   # OTA update agent and JSON control
+├── sensor_drivers/        # CANbus, Modbus, GPIO, MQTT handlers
+├─- src/
+│   ├─ agents/             # AI Agents (system recovery, adapter autogen, release agent)
+│   ├─ collector.py
+│   ├─ batcher.py
+│   ├─ cli.py
+│   └─ decision_engine/
+│      └─ engine.py
+├─- tools/
+│   └─ healthcheck.py       # Repo healthcheck tool
+├─- requirements.txt
+├─- requirements-addon.txt  # Dependencies for AI Agents
 ├── INSTALL.md
-├── requirements.txt
+├── README.md
+├── LICENSE
 ├── .gitignore
 ```
 
@@ -222,16 +247,24 @@ python -m src.cli collect --config configs/config.yaml
 python -m src.cli batch --config configs/config.yaml
 ```
 
-### 4) MQTT topics (default)
-- `factory/vision/detections` – raw detections (per frame)
-- `factory/vision/events` – filtered/decided events (if you wire through decision engine)
+---
 
-### 5) Troubleshooting
-- **Model not found**: ensure `models/defect_detector.onnx` exists or pass an absolute path with `--model`.
-- **Unsupported IR version**: upgrade `onnxruntime` or re-generate model with IR=10.
-- **No camera**: use `--video` with a test clip.
-- **Broker connection**: start Mosquitto locally or point to your broker in `examples/vision_inspection/camera_infer.py` (MQTT_HOST/PORT).
+## 🧠 ONNX Model Troubleshooting
 
+If you encounter errors like:
+
+> `Unsupported model IR version: 11, max supported IR version: 10`
+
+You can either:
+
+1. Upgrade your ONNX runtime:
+   ```bash
+   pip install --upgrade onnxruntime
+   ```
+
+2. Re-export the model with `ir_version=10`
+
+---
 
 ### ⚡🔧📦 AI Agents Quick-Start
 
@@ -253,6 +286,17 @@ python -m src.cli batch --config configs/config.yaml
   ```bash
   python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
   ```
+
+  > Install add-on dependencies:
+  ```bash
+  pip install -r requirements-addon.txt
+  ```
+
+  > Outputs include:
+  - `dist/config.autogen.yaml`
+  - `dist/release_notes.md`
+
+  ---
 
 ### MQTT Broker (Mosquitto) — Quick Run
 
@@ -293,4 +337,3 @@ python -m src.cli batch --config configs/config.yaml
 ## 📄 License
 
 MIT License — open for research, testing, and pilot deployment.
-
