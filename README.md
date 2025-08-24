@@ -3,7 +3,11 @@
 
 > **“Edge AI Vision + Sensor Gateway” for Vehicle / Factory / City Use**
 
-This open-source project demonstrates how to deploy real-time AI object detection, sensor data fusion, and industrial dashboards using **Sintrones rugged Edge AI hardware**. It’s built for system integrators, developers, and researchers working in transportation, manufacturing, and smart infrastructure.
+The Sintrones Edge AI Starter Kit is a production-ready, open-source framework designed to accelerate **real-world deployments** of AI-enhanced sensor fusion across vehicles, factories, and smart cities.
+
+Built on rugged industrial-grade hardware, it enables seamless integration of **vision AI**, **sensor telemetry**, **edge dashboards**, and **protocol adapters** (MQTT, Modbus, CANbus) to create deployable proof-of-concepts and real-time systems.
+
+Ideal for **system integrators**, **smart factory teams**, and **urban solution architects**, this repo provides all core modules and examples to quickly demonstrate AI value at the edge.
 
 > 💡 **Sales + Collaboration**: Use this as a customer-facing PoC and R&D starter kit. Ideal for OEMs, system integrators, and smart infrastructure pilots in SEA or global deployments.
 
@@ -11,29 +15,29 @@ This open-source project demonstrates how to deploy real-time AI object detectio
 
 ## 🚀 Features
 
-- 📷 Use real camera + industrial sensor inputs (USB, PoE, RS232, etc.)
-- 🧠 Deploy AI models like YOLOv5 or OpenVINO for object detection
-- 📊 Display data and AI results via Streamlit or Grafana dashboard
-- 🔌 Communicate via **MQTT**, **Modbus**, or **CANBus**
-- 📡 Optional integration of **5G modules + GPS** for mobile/vehicular use
-- 🔄 Built-in OTA update agent for field-deployed upgrades
-- **AI Agents Add-on**:
-  - ⚡ *System Recovery Agent* monitors MQTT heartbeats and triggers recovery actions.
-  - 🔧 *Adapter Auto-Gen Agent* inspects MQTT/OPC UA and generates adapter configs.
-  - 📦 *Release Agent* runs `tools/healthcheck.py` and drafts `dist/release_notes.md`.
-- **Vision Inspection**: camera publisher sample and ONNX dummy model generator.
-- **Healthcheck Tool**: `tools/healthcheck.py` to verify syntax, deps, and structure.
+- 🎥 **Multi-Modal Sensor Input** — Real camera streams + industrial signals (USB, PoE, RS232, GPIO)
+- 🧠 **AI Model Inference** — Supports YOLOv5, OpenVINO, or ONNX for object detection and event logic
+- 📊 **Dashboards** — Visualize detections and sensor states via Streamlit (lightweight) or Grafana (pro)
+- 🔌 **Industrial Protocol Support** — Communicates via MQTT, Modbus RTU/TCP, and CANBus for machine/vehicle data
+- 📡 **Mobility-Ready** — Integrates 5G modules, GNSS/GPS, and CAN for use in transportation/fleet systems
+- 🔄 **OTA Management** — Update devices in the field via JSON-controlled OTA agent
+- 🤖 **AI Agent Framework** — Add-on agents include:
+  - ⚡ *System Recovery Agent* for fault detection and recovery
+  - 🔧 *Adapter Auto-Gen Agent* to auto-generate configs for new devices (MQTT/OPC-UA)
+  - 📦 *Release Agent* to run readiness tests and publish release notes
+- 🧪 **Vision Inspection Demos** — ONNX model generator + camera inferencing pipeline
+- 🔍 **Repo Healthcheck** — Lint and structure audit via `tools/healthcheck.py`
 
 ---
 
 ## 🤝 Sales + Technical Collaboration
 
 This starter kit aligns with Sintrones’ efforts to:
-- Support system integrators and OEMs with demo-ready tools
-- Collaborate on R&D and proof-of-concepts
-- Promote industrial AI adoption across SEA & global markets
+- 🛠️ Support System Integrators and SMEs with demo-ready tools
+- 🤝 Collaborate on R&D and Proof-of-Concepts
+- 🌏 Promote industrial AI adoption across Thailand & SEA markets
 
-Use it as a base to build your own PoC, integrate with Odoo IoT, or contribute modules!
+Use it as a base to build your own PoC, integrate with IIoT, or contribute modules! this repo helps you **accelerate time-to-demo and validate value** at the edge.
 
 ---
 
