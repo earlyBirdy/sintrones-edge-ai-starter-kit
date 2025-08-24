@@ -9,7 +9,7 @@ Built on rugged industrial-grade hardware, it enables seamless integration of **
 
 Ideal for **system integrators**, **smart factory teams**, and **urban solution architects**, this repo provides all core modules and examples to quickly demonstrate AI value at the edge.
 
-> 💡 **Sales + Collaboration**: Use this as a customer-facing PoC and R&D starter kit. Ideal for OEMs, system integrators, and smart infrastructure pilots in SEA or global deployments.
+> 💡 **Sales + Collaboration**: Use this as a customer-facing PoC and R&D starter kit. Ideal for OEMs, system integrators, and smart infrastructure pilots in Thailand or SEA deployments.
 
 ---
 
