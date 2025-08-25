@@ -372,6 +372,22 @@ labels = cluster_features(feature_array, n_clusters=4)
 
 ---
 
+## 🖥️ Streamlit Log Viewer
+
+Use the built-in dashboard to browse visual inspection logs.
+
+### ▶️ Launch Viewer
+```bash
+streamlit run dashboard/log_viewer.py
+```
+
+### 🔍 What It Does
+- Displays image logs from `logs/*.jpg`
+- Shows associated metadata from `logs/*.json`
+- Sidebar shows count of PASS/FAIL units
+
+---
+
 ## 📢 Community & Contact
 
 - [Website](https://www.sintrones.com)

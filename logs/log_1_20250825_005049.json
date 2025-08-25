@@ -1,0 +1,6 @@
+{
+  "line": "L2",
+  "status": "PASS",
+  "anomaly_score": 0.4,
+  "model": "defect_detector.onnx"
+}
