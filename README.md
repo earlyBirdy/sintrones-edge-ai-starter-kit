@@ -403,6 +403,29 @@ Tests include:
 
 ---
 
+## 🧪 Automated Testing & CI
+
+This project includes a growing suite of `pytest`-based unit tests found in the `/tests` folder.
+
+### Test Coverage Areas:
+- `logger.py` — Logs each inference and frame snapshot
+- `ota/model_switcher.py` — OTA JSON-based model switch controller
+- `src/agents/system_recovery_agent.py` — Simple heartbeat-based recovery agent
+- `dashboard/log_viewer.py` — Streamlit app to view inference logs and anomaly images
+
+### ✅ GitHub Actions CI
+
+GitHub Actions automatically runs tests on every push or pull request to `main`.  
+The test workflow includes:
+- Python 3.10 setup
+- Dependency install (`requirements.txt`, `requirements-addon.txt`)
+- CI environment with `PYTHONPATH` for clean imports
+- Full pytest run on `/tests`
+
+See `.github/workflows/python-ci.yml` for the CI config.
+
+---
+
 ## 📢 Community & Contact
 
 - [Website](https://www.sintrones.com)
