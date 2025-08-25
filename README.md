@@ -1,5 +1,6 @@
 
 # 📦 Sintrones Edge AI Starter Kit
+![Test Status](https://github.com/earlyBirdy/sintrones-edge-ai-starter-kit/actions/workflows/python-ci.yml/badge.svg)
 
 > **“Edge AI Vision + Sensor Gateway” for Vehicle / Factory / City Use**
 
