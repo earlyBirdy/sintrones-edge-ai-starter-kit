@@ -328,6 +328,50 @@ You can either:
 
 ---
 
+## 🔍 Enhanced Vision Features (v1.1.0 Patch)
+
+This patch includes additional AI/vision inspection modules for anomaly detection, logging, and RCA.
+
+### ✅ New Capabilities
+
+| Feature           | Module                           | Description |
+|------------------|----------------------------------|-------------|
+| Anomaly Detection| `anomaly/padim_infer.py`         | Basic visual anomaly scoring (extendable to PaDiM, DRAEM) |
+| Frame Logger     | `logger/frame_logger.py`         | Save inspection snapshots with metadata |
+| Root Cause Analysis (RCA) | `clustering/image_cluster.py` | Cluster visually similar defects using PCA + k-means |
+| OTA Model Switch | `ota/model_switcher.py` + `update_control.json` | Swap ONNX models by version or line config |
+
+### 🔧 Usage Examples
+
+**Log a Frame and Metadata**
+```python
+from logger.frame_logger import save_frame_with_metadata
+save_frame_with_metadata(image, {"line": "A1", "status": "PASS"})
+```
+
+**Run Anomaly Detection**
+```python
+from anomaly.padim_infer import detect_anomalies
+result = detect_anomalies(image)
+print(result["is_anomaly"], result["anomaly_score"])
+```
+
+**Switch Model via OTA Config**
+```python
+from ota.model_switcher import get_model_path_from_ota
+model_path = get_model_path_from_ota()  # uses ota/update_control.json
+```
+
+**Cluster Image Features (RCA)**
+```python
+from clustering.image_cluster import cluster_features
+labels = cluster_features(feature_array, n_clusters=4)
+```
+
+> These modules are designed to be extendable and can be linked with camera inference pipelines, OTA update agents, or retraining workflows.
+
+---
+
 ## 📢 Community & Contact
 
 - [Website](https://www.sintrones.com)
