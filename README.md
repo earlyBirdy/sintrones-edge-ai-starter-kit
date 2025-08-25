@@ -388,6 +388,20 @@ streamlit run dashboard/log_viewer.py
 
 ---
 
+## 🧪 Running Tests
+
+Run all tests using:
+
+```bash
+pytest tests/
+```
+
+Tests include:
+- Logger: saves annotated frame + JSON
+- OTA model switch: reads ONNX path from control JSON
+
+---
+
 ## 📢 Community & Contact
 
 - [Website](https://www.sintrones.com)
