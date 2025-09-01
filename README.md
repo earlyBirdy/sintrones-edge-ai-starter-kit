@@ -14,6 +14,17 @@ Ideal for **system integrators**, **smart factory teams**, and **urban solution 
 
 ---
 
+## 🤝 Sales + Technical Collaboration
+
+This starter kit aligns with Sintrones’ efforts to:
+- 🛠️ Support System Integrators and SMEs with demo-ready tools
+- 🤝 Collaborate on R&D and Proof-of-Concepts
+- 🌏 Promote industrial AI adoption across Thailand & SEA markets
+
+Use it as a base to build your own PoC, integrate with IIoT, or contribute modules! this repo helps you **accelerate time-to-demo and validate value** at the edge.
+
+---
+
 ## 🚀 Features
 
 - 🎥 **Multi-Modal Sensor Input** — Real camera streams + industrial signals (USB, PoE, RS232, GPIO)
@@ -31,14 +42,32 @@ Ideal for **system integrators**, **smart factory teams**, and **urban solution 
 
 ---
 
-## 🤝 Sales + Technical Collaboration
+## 🚀 Enhanced Edge AI Features (v2)
 
-This starter kit aligns with Sintrones’ efforts to:
-- 🛠️ Support System Integrators and SMEs with demo-ready tools
-- 🤝 Collaborate on R&D and Proof-of-Concepts
-- 🌏 Promote industrial AI adoption across Thailand & SEA markets
+### 🧠 Edge-First Design: Local, Secure, Low Latency
+- Local ONNX inference with minimal latency
+- Motion detection and ROI cropping reduce unnecessary inference
+- Peer sync via MQTT to share anomalies across devices (no cloud dependency)
 
-Use it as a base to build your own PoC, integrate with IIoT, or contribute modules! this repo helps you **accelerate time-to-demo and validate value** at the edge.
+### 🔁 Rapid Adaptability: Few-Shot Fine-Tuning UI
+- New Streamlit UI for labeling and generating ONNX update templates
+- Supports few-shot templates (5–10 images) for new defect types
+- Pre-integrated DRAEM/PaDiM ready for future learning
+
+### ⚙️ Optimized Runtime Performance
+- ONNX backend supported; TensorRT/OpenVINO optional
+- Streamlit dashboard shows FPS, RAM, backend
+- Auto-tuning suggestions planned
+
+### 📡 AI/QA Remote Sync
+- MQTT uploader for logs + summary
+- Versioned logs: timestamp, model version, device ID
+- CSV/JSON export for remote QA review
+
+### 📦 CI/CD for Edge + MLOps Telemetry
+- OTA updates managed via GitHub Actions
+- Devices publish health-checks (uptime, fail count)
+- Inference telemetry supports fleet observability
 
 ---
 

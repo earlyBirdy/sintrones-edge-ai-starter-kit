@@ -65,3 +65,32 @@ docker run -it -p 1883:1883 eclipse-mosquitto
 ## ✅ You're ready!
 
 Check out the `/examples` folder to test visual inspection flows.
+## 🛠️ New Modules & Setup
+
+To use the enhanced features:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Optional Installs
+- For Streamlit UI: `pip install streamlit`
+- For MQTT sync: `pip install paho-mqtt`
+- For benchmarking (ONNX runtime/tensorrt): follow hardware-specific docs
+
+### Start Fine-Tuning UI
+```bash
+streamlit run dashboard/fine_tune_ui.py
+```
+
+### Start Benchmark Panel
+```bash
+streamlit run dashboard/benchmark_panel.py
+```
+
+### Run Health Check
+```bash
+python tools/health_check.py
+```
+
+---
