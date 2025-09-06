@@ -10,5 +10,7 @@ openvino
 flask
 requests
 
+pipreqs
+
 onnxruntime
 pytest
