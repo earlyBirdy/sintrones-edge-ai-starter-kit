@@ -1,27 +1,29 @@
-
 import streamlit as st
 import pandas as pd
 import os
-import glob
 import json
 from PIL import Image
-import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Edge AI Dashboard", layout="wide")
 
 st.title("📊 Sintrones Edge AI Dashboard")
 
-tabs = st.tabs(["✅ Anomaly Log Viewer", "📈 Model Benchmark Viewer", "🖼️ Heatmap Comparison", "⚙ OTA / System Status"])
+tabs = st.tabs([
+    "✅ Anomaly Log Viewer", 
+    "📈 Model Benchmark Viewer", 
+    "🖼️ Heatmap Comparison", 
+    "⚙ OTA / System Status"
+])
 
 # === Anomaly Log Viewer ===
 with tabs[0]:
     st.header("✅ Anomaly Log Viewer")
     log_dir = "logs/"
     if os.path.exists(log_dir):
-        log_files = glob.glob(os.path.join(log_dir, "*.csv"))
+        log_files = [f for f in os.listdir(log_dir) if f.endswith(".csv")]
         if log_files:
             selected_log = st.selectbox("Select a log file", log_files)
-            df = pd.read_csv(selected_log)
+            df = pd.read_csv(os.path.join(log_dir, selected_log))
             st.dataframe(df)
         else:
             st.warning("No CSV log files found in logs/")
@@ -34,12 +36,13 @@ with tabs[1]:
     benchmark_file = "benchmarks/benchmark.json"
     if os.path.exists(benchmark_file):
         with open(benchmark_file, "r") as f:
-            data = json.load(f)
-        df = pd.DataFrame(data)
-        if all(col in df.columns for col in ['runtime', 'fps', 'latency_ms']):
+            benchmark_data = json.load(f)
+        df = pd.DataFrame(benchmark_data)
+        if "runtime" in df.columns and "fps" in df.columns and "latency_ms" in df.columns:
+            st.subheader("📊 Performance Results")
             st.bar_chart(df.set_index("runtime")[["fps", "latency_ms"]])
         else:
-            st.warning("benchmark.json is missing expected columns: 'runtime', 'fps', 'latency_ms'")
+            st.warning("Benchmark file found but required columns ['runtime','fps','latency_ms'] are missing.")
     else:
         st.info("No benchmark file found at benchmarks/benchmark.json")
 
@@ -52,13 +55,13 @@ with tabs[2]:
         if os.path.exists(img1_path):
             st.image(img1_path, caption="Original", use_column_width=True)
         else:
-            st.warning("Image not found.")
+            st.warning("Original image not found.")
     with col2:
         heatmap_path = st.text_input("Heatmap Image Path", "samples/heatmap.jpg")
         if os.path.exists(heatmap_path):
             st.image(heatmap_path, caption="Heatmap", use_column_width=True)
         else:
-            st.warning("Heatmap not found.")
+            st.warning("Heatmap image not found.")
 
 # === OTA / System Status ===
 with tabs[3]:

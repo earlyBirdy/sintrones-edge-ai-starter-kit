@@ -1,14 +1,17 @@
-{
-  "ONNX": {
+[
+  {
+    "runtime": "ONNX",
+    "fps": 24.5,
+    "latency_ms": 41.3
+  },
+  {
+    "runtime": "OpenVINO",
     "fps": 30.2,
-    "latency_ms": 33.1
+    "latency_ms": 32.1
   },
-  "OpenVINO": {
-    "fps": 27.5,
-    "latency_ms": 36.4
-  },
-  "TensorRT": {
-    "fps": 42.8,
-    "latency_ms": 22.3
+  {
+    "runtime": "TensorRT",
+    "fps": 58.0,
+    "latency_ms": 17.8
   }
-}
+]

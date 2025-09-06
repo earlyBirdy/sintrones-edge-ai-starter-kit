@@ -1,0 +1,17 @@
+[
+  {
+    "runtime": "onnx",
+    "fps": 22.5,
+    "latency_ms": 43.2
+  },
+  {
+    "runtime": "tensorrt",
+    "fps": 29.8,
+    "latency_ms": 36.7
+  },
+  {
+    "runtime": "openvino",
+    "fps": 25.3,
+    "latency_ms": 41.0
+  }
+]
