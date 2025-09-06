@@ -25,6 +25,27 @@ Use it as a base to build your own PoC, integrate with IIoT, or contribute modul
 
 ---
 
+## 🎯 Positioning Strategy
+
+This Edge AI Starter Kit stands out with:
+
+- **🧠 Local-First Intelligence**  
+  All inference, logging, and anomaly analysis runs locally — minimizing latency, reducing cloud dependency, and ensuring data privacy at the edge.
+
+- **💸 Cost-Effective & Flexible**  
+  Open-source, license-free foundation avoids long-term vendor lock-in. Run it anywhere — from industrial PCs to embedded AI boxes.
+
+- **🧰 Easier to Deploy & Extend**  
+  Comes pre-integrated with a modular Streamlit UI, OTA-ready model manager, logging tools, and anomaly pipelines. No complex SDKs or binary blobs — it's fully Python-native and developer-friendly.
+
+- **🔄 Rapid Adaptation**  
+  Easily customize models, inject fine-tuning data, or deploy new features per production line — all with simple YAML config or UI tools.
+
+- **🧱 Built to Scale**  
+  Modular by design — each service (logging, OTA, model inference) can run standalone or combined. Suitable for both single-machine use and fleet deployments.
+
+---
+
 ## 🚀 Features
 
 - 🎥 **Multi-Modal Sensor Input** — Real camera streams + industrial signals (USB, PoE, RS232, GPIO)
@@ -68,6 +89,34 @@ Use it as a base to build your own PoC, integrate with IIoT, or contribute modul
 - OTA updates managed via GitHub Actions
 - Devices publish health-checks (uptime, fail count)
 - Inference telemetry supports fleet observability
+
+---
+
+## 🚀 Next Enhancements Roadmap
+
+These upcoming modules improve performance, adaptability, and operational visibility for Edge AI deployment:
+
+1. **🧠 Model Runtime Auto-Tuner**
+   - Benchmark ONNX, OpenVINO, and TensorRT per hardware
+   - Automatically select the best runtime for GPU/CPU targets
+
+2. **🛠️ Few-Shot Fine-Tune Pipeline**
+   - Label → Retrain → Export → Deploy — all from Streamlit UI
+   - Enables rapid adaptation for new defect types
+
+3. **📡 Fleet Dashboard**
+   - Central monitoring of all edge devices
+   - Tracks inference stats, anomaly counts, OTA history, and uptime
+
+4. **🔍 Visual QA Dashboard**
+   - Image viewer for logged detections
+   - Heatmap overlay, false positive analysis, and traceability
+
+5. **🧱 Modular Architecture**
+   - Each component (detection, logging, OTA, telemetry) is containerized or modularized
+   - Easier scaling, testing, and integration
+
+> 📁 See the `modules/` folder for scaffolding of each enhancement.
 
 ---
 
