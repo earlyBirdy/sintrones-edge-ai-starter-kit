@@ -1,0 +1,14 @@
+{
+  "ONNX": {
+    "fps": 30.2,
+    "latency_ms": 33.1
+  },
+  "OpenVINO": {
+    "fps": 27.5,
+    "latency_ms": 36.4
+  },
+  "TensorRT": {
+    "fps": 42.8,
+    "latency_ms": 22.3
+  }
+}

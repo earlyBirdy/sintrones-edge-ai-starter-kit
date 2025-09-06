@@ -1,0 +1,6 @@
+timestamp,device_id,model_version,inference_result,confidence,image_path
+2025-08-26 12:00:00,edge-001,v1.2.3,normal,0.91,heatmaps/img_0.png
+2025-08-26 12:01:00,edge-001,v1.2.3,anomaly,0.4,heatmaps/img_1.png
+2025-08-26 12:02:00,edge-001,v1.2.3,normal,0.95,heatmaps/img_2.png
+2025-08-26 12:03:00,edge-001,v1.2.3,anomaly,0.35,heatmaps/img_3.png
+2025-08-26 12:04:00,edge-001,v1.2.3,normal,0.98,heatmaps/img_4.png
