@@ -36,7 +36,12 @@ with tabs[1]:
         with open(benchmark_file, "r") as f:
             data = json.load(f)
         df = pd.DataFrame(data)
-        st.bar_chart(df.set_index("runtime")[["fps", "latency_ms"]])
+        
+if "runtime" in df.columns and "fps" in df.columns and "latency_ms" in df.columns:
+    st.bar_chart(df.set_index("runtime")[["fps", "latency_ms"]])
+else:
+    st.warning("Expected columns ['runtime', 'fps', 'latency_ms'] not found in benchmark.csv.")
+
     else:
         st.info("No benchmark file found at benchmarks/benchmark.json")
 
