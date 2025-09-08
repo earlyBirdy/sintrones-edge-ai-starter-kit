@@ -385,20 +385,9 @@ You can either:
 
 ---
 
-## 🔍 Enhanced Vision Features (v1.1.0 Patch)
+## 🔍 Enhanced Vision Features Usage Examples
 
-This patch includes additional AI/vision inspection modules for anomaly detection, logging, and RCA.
-
-### ✅ New Capabilities
-
-| Feature           | Module                           | Description |
-|------------------|----------------------------------|-------------|
-| Anomaly Detection| `anomaly/padim_infer.py`         | Basic visual anomaly scoring (extendable to PaDiM, DRAEM) |
-| Frame Logger     | `logger/frame_logger.py`         | Save inspection snapshots with metadata |
-| Root Cause Analysis (RCA) | `clustering/image_cluster.py` | Cluster visually similar defects using PCA + k-means |
-| OTA Model Switch | `ota/model_switcher.py` + `update_control.json` | Swap ONNX models by version or line config |
-
-### 🔧 Usage Examples
+The additional AI/vision inspection modules for anomaly detection, logging, and RCA.
 
 **Log a Frame and Metadata**
 ```python
