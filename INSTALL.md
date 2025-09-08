@@ -28,7 +28,7 @@ pip install --upgrade pip
 ## 4. Install Dependencies
 
 ```bash
-pip install -r requirements-all-in-one.txt
+pip install -r requirements.txt
 ```
 
 > Contains all core, vision, and dashboard dependencies
@@ -36,8 +36,8 @@ pip install -r requirements-all-in-one.txt
 ## 5. Launch the Dashboard
 
 ```bash
-cd lowcode_ui
-streamlit run app.py
+streamlit run lowcode_ui/app.py
+
 ```
 
 > All functionality is integrated inside the unified dashboard: fine-tuning, benchmarking, explainability, and more.

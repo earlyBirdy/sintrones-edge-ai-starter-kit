@@ -1,6 +1,11 @@
 import streamlit as st
 import subprocess
 import time
+import sys
+import os
+
+# Ensure parent directory is in path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from ai_workflow.trainer import train_model
 from ai_workflow.inference_kit import run_inference

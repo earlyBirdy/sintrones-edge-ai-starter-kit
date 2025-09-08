@@ -235,8 +235,8 @@ sintrones-edge-ai-starter-kit/
 
 3. **Dashboard:**
    ```bash
-   cd lowcode_ui
-   streamlit run app.py
+   streamlit run lowcode_ui/app.py
+
    ```
 
 ## Vision Inspection Camera Publisher
