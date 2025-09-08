@@ -1,4 +1,6 @@
 import streamlit as st
+import subprocess
+import time
 
 from ai_workflow.trainer import train_model
 from ai_workflow.inference_kit import run_inference
@@ -6,18 +8,18 @@ from data_traceability.log_store import store_log
 from multi_camera_support.multi_cam_streamer import get_mock_camera_feeds
 from xai_tools.saliency_map import generate_saliency
 
-st.set_page_config(page_title="Edge AI All-in-One Dashboard", layout="wide")
-st.title("📊 Sintrones Edge AI Starter Kit — All-in-One Dashboard")
+st.set_page_config(page_title="Sintrones Edge AI All-in-One Dashboard", layout="wide")
+st.title("📊 Sintrones Edge AI Starter Kit — Unified Dashboard")
 
 tabs = st.tabs([
     "🏁 Quick Start",
     "📂 Examples",
     "🧠 Train Model",
-    "🔍 Run Inference",
-    "🎥 Multi-Camera View",
+    "🔍 Inference",
+    "🎥 Multi-Camera",
     "🧩 Explainability",
-    "📜 Log & Traceability",
-    "🛠️ Fine-Tuning UI",
+    "📜 Logs",
+    "🛠️ Fine-Tune UI",
     "📈 Benchmark Panel",
     "❤️ Health Check"
 ])
@@ -70,16 +72,30 @@ with tabs[6]:
     st.info("🔍 Trace logs (placeholder): backend not connected to actual DB.")
 
 with tabs[7]:
-    st.header("Fine-Tuning UI")
-    st.markdown("Launch separately via:")
-    st.code("streamlit run dashboard/fine_tune_ui.py")
+    st.header("🛠️ Fine-Tune UI")
+    st.markdown("Upload a JSON/YAML template to simulate fine-tuning.")
+    uploaded = st.file_uploader("Upload Few-Shot Template", type=["json", "yaml"])
+    if uploaded:
+        st.success("Uploaded successfully. Fine-tuning would start...")
+        with st.spinner("Fine-tuning model..."):
+            time.sleep(2)
+        st.success("Fine-tune complete. New ONNX exported.")
 
 with tabs[8]:
-    st.header("Benchmark Panel")
-    st.markdown("Launch separately via:")
-    st.code("streamlit run dashboard/benchmark_panel.py")
+    st.header("📈 Benchmark Panel")
+    st.markdown("Run ONNX vs PyTorch speed comparison (simulated).")
+    runtimes = ["ONNX", "Torch", "TensorRT"]
+    for r in runtimes:
+        fps = 30 + hash(r) % 15
+        st.metric(label=f"{r} Inference FPS", value=f"{fps} FPS")
 
 with tabs[9]:
-    st.header("Health Check")
-    st.markdown("Run system diagnostics:")
-    st.code("python tools/health_check.py")
+    st.header("❤️ Health Check")
+    st.markdown("Checking files, modules, and dependencies...")
+    try:
+        result = subprocess.run(["python", "tools/health_check.py"], capture_output=True, text=True)
+        st.code(result.stdout if result.stdout else "No output", language='bash')
+        if result.stderr:
+            st.error(result.stderr)
+    except Exception as e:
+        st.error(str(e))
