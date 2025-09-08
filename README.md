@@ -10,6 +10,8 @@ Built on rugged industrial-grade hardware, it enables seamless integration of **
 
 Ideal for **system integrators**, **smart factory teams**, and **urban solution architects**, this repo provides all core modules and examples to quickly demonstrate AI value at the edge.
 
+This toolkit enables rapid development of **Edge AI Vision Inspection** and **Sensor Gateway** systems using real-time data streams, anomaly detection, camera feeds, OTA updates, and a unified Streamlit dashboard.
+
 > 💡 **Sales + Collaboration**: Use this as a customer-facing PoC and R&D starter kit. Ideal for OEMs, system integrators, and smart infrastructure pilots in Thailand or SEA deployments.
 
 ---
@@ -31,6 +33,9 @@ This Edge AI Starter Kit stands out with:
 
 - **🧠 Local-First Intelligence**  
   All inference, logging, and anomaly analysis runs locally — minimizing latency, reducing cloud dependency, and ensuring data privacy at the edge.
+  - Local ONNX inference with minimal latency
+  - Motion detection and ROI cropping reduce unnecessary inference
+  - Peer sync via MQTT to share anomalies across devices (no cloud dependency)
 
 - **💸 Cost-Effective & Flexible**  
   Open-source, license-free foundation avoids long-term vendor lock-in. Run it anywhere — from industrial PCs to embedded AI boxes.
@@ -46,77 +51,47 @@ This Edge AI Starter Kit stands out with:
 
 ---
 
-## 🚀 Features
+## 🚀 Core Features
 
-- 🎥 **Multi-Modal Sensor Input** — Real camera streams + industrial signals (USB, PoE, RS232, GPIO)
-- 🧠 **AI Model Inference** — Supports YOLOv5, OpenVINO, or ONNX for object detection and event logic
-- 📊 **Dashboards** — Visualize detections and sensor states via Streamlit (lightweight) or Grafana (pro)
-- 🔌 **Industrial Protocol Support** — Communicates via MQTT, Modbus RTU/TCP, and CANBus for machine/vehicle data
-- 📡 **Mobility-Ready** — Integrates 5G modules, GNSS/GPS, and CAN for use in transportation/fleet systems
-- 🔄 **OTA Management** — Update devices in the field via JSON-controlled OTA agent
-- 🤖 **AI Agent Framework** — Add-on agents include:
-  - ⚡ *System Recovery Agent* for fault detection and recovery
-  - 🔧 *Adapter Auto-Gen Agent* to auto-generate configs for new devices (MQTT/OPC-UA)
-  - 📦 *Release Agent* to run readiness tests and publish release notes
-- 🧪 **Vision Inspection Demos** — ONNX model generator + camera inferencing pipeline
-- 🔍 **Repo Healthcheck** — Lint and structure audit via `tools/healthcheck.py`
-
----
-
-## 🚀 Enhanced Edge AI Features (v2)
-
-### 🧠 Edge-First Design: Local, Secure, Low Latency
-- Local ONNX inference with minimal latency
-- Motion detection and ROI cropping reduce unnecessary inference
-- Peer sync via MQTT to share anomalies across devices (no cloud dependency)
-
-### 🔁 Rapid Adaptability: Few-Shot Fine-Tuning UI
-- New Streamlit UI for labeling and generating ONNX update templates
-- Supports few-shot templates (5–10 images) for new defect types
-- Pre-integrated DRAEM/PaDiM ready for future learning
-
-### ⚙️ Optimized Runtime Performance
-- ONNX backend supported; TensorRT/OpenVINO optional
-- Streamlit dashboard shows FPS, RAM, backend
-- Auto-tuning suggestions planned
-
-### 📡 AI/QA Remote Sync
-- MQTT uploader for logs + summary
-- Versioned logs: timestamp, model version, device ID
-- CSV/JSON export for remote QA review
-
-### 📦 CI/CD for Edge + MLOps Telemetry
-- OTA updates managed via GitHub Actions
-- Devices publish health-checks (uptime, fail count)
-- Inference telemetry supports fleet observability
-
----
-
-## 🚀 Next Enhancements Roadmap
-
-These upcoming modules improve performance, adaptability, and operational visibility for Edge AI deployment:
-
-1. **🧠 Model Runtime Auto-Tuner**
-   - Benchmark ONNX, OpenVINO, and TensorRT per hardware
-   - Automatically select the best runtime for GPU/CPU targets
-
-2. **🛠️ Few-Shot Fine-Tune Pipeline**
-   - Label → Retrain → Export → Deploy — all from Streamlit UI
-   - Enables rapid adaptation for new defect types
-
-3. **📡 Fleet Dashboard**
-   - Central monitoring of all edge devices
-   - Tracks inference stats, anomaly counts, OTA history, and uptime
-
-4. **🔍 Visual QA Dashboard**
-   - Image viewer for logged detections
-   - Heatmap overlay, false positive analysis, and traceability
-
-5. **🧱 Modular Architecture**
-   - Each component (detection, logging, OTA, telemetry) is containerized or modularized
+- 🎥 Multi-Modal Sensor Input — Real camera streams + industrial signals (USB, PoE, RS232, GPIO)
+- 🔌 Industrial Protocol Support — Communicates via MQTT, Modbus RTU/TCP, and CANBus for machine/vehicle data
+- 📡 Mobility-Ready — Integrates 5G modules, GNSS/GPS, and CAN for use in transportation/fleet systems
+- 📊 Dashboards — Visualize detections and sensor states via Streamlit (lightweight) with 10+ tabs
+  - Central monitoring of all edge devices
+  - Tracks inference stats, anomaly counts, OTA history, and uptime
+  - 🎥 Multi-Camera Stream Handling
+- 🔄 OTA Update Control + Model Runtime Switcher — Update devices in the field via JSON-controlled OTA agent
+  - Benchmark ONNX, OpenVINO, and TensorRT per hardware
+  - Automatically select the best runtime for GPU/CPU targets
+- 🧠 Modular AI training, inference, deployment with ONNX/PyTorch for object detection and event logic
+  - ONNX backend supported; TensorRT/OpenVINO optional
+  - Streamlit dashboard shows FPS, RAM, backend
+  - Auto-tuning suggestions planned
+- 🤖 AI Agent (watchdog)— include:
+  - ⚡ System Recovery Agent for fault detection and recovery
+  - 🔧Adapter Auto-Gen Agent to auto-generate configs for new devices (MQTT/OPC-UA)
+  - 📦Release Agent to run readiness tests and publish release notes
+- 📈 AI/QA Remote Sync - Visual QA Dashboard + Benchmark Performance Panel (Streamlit)
+  - MQTT uploader for logs + summary
+  - Versioned logs: timestamp, model version, device ID
+  - CSV/JSON export for remote QA review
+  - Image viewer for logged detections
+  - Heatmap overlay, false positive analysis, and traceability
+- 🔁 Few-Shot Fine-Tuning Pipeline for Quick Model Adaptation
+  - Label → Retrain → Export → Deploy — all from Streamlit UI
+  - Enables rapid adaptation for new defect types
+- 🧩 Anomaly Detection and Explainability - Explainability Tools (Saliency Map, RCA)
+- 📂 Logging + Traceability (Frame, JSON, Meta) - Full logging and Traceability for Inspection Records
+- 📡 MQTT Sync for Anomaly / Event Sharing
+- 🧱 Modular Architecture
+   - Each component (detection, logging, OTA, telemetry) is modularized
    - Easier scaling, testing, and integration
-
-> 📁 See the `modules/` folder for scaffolding of each enhancement.
+- 📦 Pytest Unit Testing & CI Workflow - CI/CD for Edge + MLOps Telemetry
+  - OTA updates managed via GitHub Actions
+  - Devices publish health-checks (uptime, fail count)
+  - Inference telemetry supports fleet observability
+- 🧪 Vision Inspection Demos — ONNX model generator + camera inferencing pipeline
+- 🔍 Repo Healthcheck — Lint and structure audit via `tools/healthcheck.py`
 
 ---
 
@@ -159,73 +134,93 @@ These upcoming modules improve performance, adaptability, and operational visibi
 - 📘 [Use Cases](/docs/USE_CASES.md): Real-world Edge AI applications in factories, vehicles, and smart cities  
 - 🤝 [Contributing Guide](/docs/CONTRIBUTING.md): How to get involved and contribute to this project
 
-  ---
+---
+
+  ## 📊 Dashboard Tabs Overview
+
+  | Tab | Description |
+  |-----|-------------|
+  | 🏁 Quick Start         | Overview of capabilities |
+  | 📂 Examples            | Launch sample scripts |
+  | 🧠 Train Model         | Start training from dataset |
+  | 🔍 Inference           | Predict outcomes and log them |
+  | 🎥 Multi-Camera        | Simulate multiple camera inputs |
+  | 🧩 Explainability      | Generate saliency maps |
+  | 📜 Logs                | Traceability and inspection history |
+  | 🛠️ Fine-Tuning UI     | Label and fine-tune with few-shot input |
+  | 📈 Benchmark Panel     | ONNX/PyTorch runtime testing |
+  | ❤️ Health Check       | Verify system and dependency health |
+
+---
 
 ## 🛠️ Project Structure
 
 ```
 sintrones-edge-ai-starter-kit/
-├── agents/                # Modular agents (system recovery, anomaly handlers, OTA)
+├── agents/                  # Modular agents (system recovery, anomaly handlers, OTA)
 │   ├── __init__.py
 │   └── ...
-├── ai_models/             # YOLOv5 or OpenVINO model files
-├── app/                   # Core dashboard + logic
+├── ai_models/               # OpenVINO model files
+├── ai_workflow/             # Training, inference, deployment modules
+├── anomaly/                 # Anomaly detection scripts (e.g., PaDiM)
+├── app/                     # Original backend app - Core dashboard + logic
 │   └── main.py
-├── configs/               # System & sensor configuration files
+├── clustering/              # RCA via image clustering
+├── configs/                 # System & sensor configuration files (YAML)
 │   └─- config.yaml
-├── dashboard/             # Streamlit-based UI for control, logging, fine-tune & benchmarking
+├── dashboard/               # Classic Streamlit UIs (fine-tune, benchmark)
 │   ├── app.py
 │   └── components/
-├── data/                  # Sample logs and inference results
+├── data/                    # Sample logs and inference results
 │   ├── sample_logs/
 │   └── demo_inputs/
-├─- dist/                  # Auto-generated configs and release notes
-├── docker/                # Dockerfile + docker-compose.yml
-├── docs/                  # Wiring diagrams, ABOX-5220 architecture
+├─- dist/                    # Auto-generated configs and release notes
+├── docker/                  # Dockerfile + docker-compose.yml
+├── docs/                    # Docs, Wiring diagrams, ABOX-5220 architecture
 │   └── index.md
-│   └─- AGENTS.md           # Documentation for AI Agents
-├── examples/              # Application-specific integration (vehicle, factory, city)
+│   └─- AGENTS.md            # Documentation for AI Agents
+├── examples/                # Application-specific integration (vehicle, factory, city)
 │   └─ vision_inspection/...
-├── logger/                # Frame logger, anomaly image storage, sync utils
+├── logger/                  # Frame logger, anomaly image storage, sync utils
 │   └── frame_logger.py
-├── models/                # ONNX models and retrained variants
+├── lowcode_ui/              # Unified Streamlit dashboard (main app)
+├── models/                  # ONNX models and retrained variants
 │   ├── base_model.onnx
 │   └─- defect_detector.onnx
 │   └── retrained_models/
-├── modules/               # New modular microservices (OTA, telemetry, detection, benchmarking)
+├── modules/                 # New modular microservices (OTA, telemetry, detection, benchmarking)
 │   ├── ota_controller/
 │   ├── telemetry/
 │   ├── fine_tune/
 │   ├── runtime_benchmark/
 │   └── visual_qa/
-├── ota/                   # OTA update agent and JSON control
-├── sensor_drivers/        # CANbus, Modbus, GPIO, MQTT handlers
-├─- src/
-│   ├─- agents/             # AI Agents (system recovery, adapter autogen, release agent)
+├── ota/                     # OTA update agent and JSON control
+├── sensor_drivers/          # CANbus, Modbus, GPIO, MQTT handlers
+├─- src/                     # AI agents and CLI tools
+│   ├─- agents/              # AI Agents (system recovery, adapter autogen, release agent)
 │   ├─- collector.py
 │   ├─- batcher.py
 │   ├─- cli.py
 │   └─- decision_engine/
 │      └─ engine.py
-├── tests/                 # Pytest test cases for core logic and modules
+├── tests/                   # Pytest unit test cases for core logic and modules
 │   └── test_*.py
 ├─- tools/
-│   └─- healthcheck.py       # Repo healthcheck tool
-├── .github/
+│   └─- healthcheck.py       # Repo healthcheck tool & utility scripts
+├── .github/                 # CI workflows
 │   └── workflows/
-│       └── python-ci.yml   # GitHub Actions for test automation
+│       └── python-ci.yml    # GitHub Actions for test automation
 ├── README.md
 ├── INSTALL.md
 ├── requirements.txt
-├─- requirements-addon.txt  # Dependencies for AI Agents
-└── config.yaml             # Configurable parameters for each module
+└── config.yaml              # Configurable parameters for each module
 ├── LICENSE
 ├── .gitignore
 ```
 
 ---
 
-## ⚡ Getting Started
+## ⚡ Quick Start
 
 1. **Clone the repository:**
    ```bash
@@ -238,9 +233,10 @@ sintrones-edge-ai-starter-kit/
    pip install -r requirements.txt
    ```
 
-3. **Run the dashboard demo:**
+3. **Dashboard:**
    ```bash
-   python app/main.py
+   cd lowcode_ui
+   streamlit run app.py
    ```
 
 ## Vision Inspection Camera Publisher
@@ -251,9 +247,6 @@ This example publishes **per-frame detections** to MQTT for the collector to ing
 ```bash
 # Core
 python -m pip install onnxruntime opencv-python paho-mqtt
-
-# Apple Silicon (M1/M2/M3): use the silicon wheel
-# python -m pip install onnxruntime-silicon opencv-python paho-mqtt
 ```
 
 ### 2) Prepare a model (optional)
@@ -313,39 +306,7 @@ You can either:
 
 ---
 
-### ⚡🔧📦 AI Agents Quick-Start
-
-- ⚡ **System Recovery Agent**  
-  ```bash
-  python -m src.agents.system_recovery_agent --config agents/system_recovery.yaml
-  ```
-
-- 🔧 **Adapter Auto-Gen Agent**  
-  ```bash
-  # MQTT mode
-  python -m src.agents.adapter_autogen_agent --mode mqtt --host localhost --topic factory/# --samples 30 --timeout 20
-
-  # OPC UA mode
-  python -m src.agents.adapter_autogen_agent --mode opcua --endpoint opc.tcp://192.168.10.20:4840
-  ```
-
-- 📦 **Release Agent**  
-  ```bash
-  python -m src.agents.release_agent --tag v0.3.0 --notes "Adapters + Vision QA"
-  ```
-
-  > Install add-on dependencies:
-  ```bash
-  pip install -r requirements-addon.txt
-  ```
-
-  > Outputs include:
-  - `dist/config.autogen.yaml`
-  - `dist/release_notes.md`
-
-  ---
-
-  ## AI Agents Add-on
+## AI Agents
 
   This repository integrates an **AI Agents Add-on** with three useful agents to enhance reliability, adaptability, and release workflows.
 
@@ -388,12 +349,6 @@ You can either:
     - **Unsupported IR version**: upgrade `onnxruntime` or re-generate model with IR=10.
     - **No camera**: use `--video` with a test clip.
     - **Broker connection**: start Mosquitto locally or point to your broker in `examples/vision_inspection/camera_infer.py` (MQTT_HOST/PORT).
-
-  ### Requirements
-  Install additional dependencies with:
-  ```bash
-  python -m pip install -r requirements-addon.txt
-  ```
 
   ### Outputs
   - **Recovery logs**: console output
@@ -490,7 +445,9 @@ streamlit run dashboard/log_viewer.py
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Automated Testing & CI
+
+This project includes a growing suite of `pytest`-based unit tests found in the `/tests` folder.
 
 Run all tests using:
 
@@ -501,12 +458,6 @@ pytest tests/
 Tests include:
 - Logger: saves annotated frame + JSON
 - OTA model switch: reads ONNX path from control JSON
-
----
-
-## 🧪 Automated Testing & CI
-
-This project includes a growing suite of `pytest`-based unit tests found in the `/tests` folder.
 
 ### Test Coverage Areas:
 - `logger.py` — Logs each inference and frame snapshot
@@ -519,7 +470,7 @@ This project includes a growing suite of `pytest`-based unit tests found in the 
 GitHub Actions automatically runs tests on every push or pull request to `main`.  
 The test workflow includes:
 - Python 3.10 setup
-- Dependency install (`requirements.txt`, `requirements-addon.txt`)
+- Dependency install (`requirements.txt`)
 - CI environment with `PYTHONPATH` for clean imports
 - Full pytest run on `/tests`
 
