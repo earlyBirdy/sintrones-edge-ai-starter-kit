@@ -1,70 +1,65 @@
 
-import os, sys, json, subprocess, io
+import os, sys, json, subprocess
 import streamlit as st
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(ROOT_DIR)
 
-# ---- Imports (with graceful fallbacks) ----
-# Inference
+# ---- Imports with graceful fallbacks ----
 try:
     from ai_workflow.inference_kit import run_inference as _run_inference
-except Exception as e:
+except Exception:
     _run_inference = None
 
-# Training
 try:
     from ai_workflow.trainer import log_training_progress
-except Exception as e:
+except Exception:
     log_training_progress = None
 
-# Multi-cam
 try:
     from multi_camera_support.multi_cam_streamer import get_mock_camera_feeds
-except Exception as e:
+except Exception:
     get_mock_camera_feeds = None
 
-# XAI / Saliency
 try:
     from xai_utils import saliency as xai_saliency
-except Exception as e:
+except Exception:
     xai_saliency = None
 try:
     from xai_utils.saliency_map import generate_saliency
-except Exception as e:
+except Exception:
     generate_saliency = None
 
-# Dashboard panels
 try:
     from dashboard.log_viewer import show_log_viewer
-except Exception as e:
+except Exception:
     show_log_viewer = None
 
 try:
     from dashboard.benchmark_viewer import show_benchmark_viewer
-except Exception as e:
+except Exception:
     show_benchmark_viewer = None
 
 try:
     from dashboard.status_panel import show_status_panel
-except Exception as e:
+except Exception:
     show_status_panel = None
 
 # ---- Page Config ----
 st.set_page_config(page_title="Sintrones Edge AI Dashboard", layout="wide")
-st.title("🛠️ Sintrones Edge AI Dashboard")
+st.title("🧠 Sintrones Edge AI Dashboard")
 
-# ---- Tabs: AI-first, Fine-tune later ----
+# ---- Tabs (AI-first) ----
 tabs = st.tabs([
     "🏁 Quick Start", "🔍 Inference", "🎥 Live Camera Feed", "📷 Multi-Cam Feeds",
     "📁 Log Viewer", "📊 Benchmarking", "❤️ OTA/System Status", "🧪 Health Check",
-    "📜 Data Traceability", "🧠 Train Model", "🔥 Saliency / XAI", "🛠️ AI Fine-Tuning", "📂 Examples"
+    "📜 Data Traceability", "🧠 Train Model", "🔥 Saliency / XAI", "🛠️ Few-Shot Fine-Tuning", "📂 Examples"
 ])
 
 # ---- 0) Quick Start ----
 with tabs[0]:
     st.subheader("🏁 Quick Start")
-    st.write("This unified dashboard prioritizes AI monitoring first. Use the tabs to run inference, preview cameras, view logs, and check system health.")
+    st.write("Prioritizes AI monitoring. Use tabs to run inference, preview cameras, view logs, check health, and manage traceability.")
 
 # ---- 1) Inference ----
 with tabs[1]:
@@ -78,7 +73,6 @@ with tabs[1]:
             if img is None:
                 st.error("Please upload an image first.")
             else:
-                # Save uploaded image to a temp file
                 tmp_path = os.path.join("logs", "tmp")
                 os.makedirs(tmp_path, exist_ok=True)
                 img_path = os.path.join(tmp_path, img.name)
@@ -90,7 +84,7 @@ with tabs[1]:
                 except Exception as e:
                     st.exception(e)
 
-# ---- 2) Live Camera Feed (placeholder; use your own source) ----
+# ---- 2) Live Camera Feed ----
 with tabs[2]:
     st.subheader("🎥 Live Camera Feed")
     st.info("Connect a real camera in your own script, or use the Multi-Cam tab for mock feeds.")
@@ -131,7 +125,7 @@ with tabs[6]:
     else:
         st.warning("dashboard/status_panel.py missing.")
 
-# ---- 7) Health Check (runs tools/healthcheck.py) ----
+# ---- 7) Health Check ----
 with tabs[7]:
     st.subheader("🧪 System Health Check")
     if st.button("Run Healthcheck"):
@@ -146,10 +140,33 @@ with tabs[7]:
         else:
             st.warning("tools/healthcheck.py not found.")
 
-# ---- 8) Data Traceability ----
+# ---- 8) Data Traceability (wired) ----
 with tabs[8]:
     st.subheader("📜 Data Traceability")
-    st.info("Traceability indexer is a placeholder. Extend data_traceability/traceability_indexer.py to implement indexing/queries.")
+    try:
+        from data_traceability.traceability_indexer import build_trace_index, summarize_trace_index
+        df = build_trace_index(log_root=os.path.join(ROOT_DIR, "logs"))
+        if df is None or df.empty:
+            st.info("No traceability records found under ./logs. Drop anomaly images into logs/anomalies or JSONL into logs/.")
+        else:
+            summary = summarize_trace_index(df)
+            k1, k2, k3 = st.columns(3)
+            k1.metric("Total Records", summary["total_records"])
+            k2.metric("Anomaly Images", summary["anomaly_images"])
+            k3.metric("JSON Events", summary["json_events"])
+
+            st.markdown("#### Records")
+            st.dataframe(df.fillna(""), use_container_width=True)
+            if summary.get("labels"):
+                st.markdown("#### Labels")
+                st.json(summary["labels"])
+            if summary.get("results"):
+                st.markdown("#### Results")
+                st.json(summary["results"])
+            csv_bytes = df.to_csv(index=False).encode("utf-8")
+            st.download_button("⬇️ Download CSV", data=csv_bytes, file_name="traceability_index.csv", mime="text/csv")
+    except Exception as e:
+        st.exception(e)
 
 # ---- 9) Train Model ----
 with tabs[9]:
@@ -177,7 +194,6 @@ with tabs[10]:
             os.makedirs(tmp_dir, exist_ok=True)
             in_path = os.path.join(tmp_dir, uploaded.name)
             with open(in_path,"wb") as f: f.write(uploaded.getbuffer())
-            # Prefer full saliency if available
             if xai_saliency is not None:
                 try:
                     import cv2, numpy as np
