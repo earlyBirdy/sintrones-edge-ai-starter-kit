@@ -36,7 +36,7 @@ pip install -r requirements.txt
 ## 5. Launch the Dashboard
 
 ```bash
-streamlit run lowcode_ui/app.py
+streamlit run app.py
 
 ```
 

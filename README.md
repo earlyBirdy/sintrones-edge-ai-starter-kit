@@ -235,7 +235,7 @@ sintrones-edge-ai-starter-kit/
 
 3. **Dashboard:**
    ```bash
-   streamlit run lowcode_ui/app.py
+   streamlit run app.py
 
    ```
 
