@@ -14,28 +14,16 @@ try:
 except Exception:
     show_status_panel = None
 
-# New pages (from the gaps-9 implementation)
-try:
-    from dashboard.model_packs import render_model_packs_page
-    from dashboard.fleet_page import render_fleet_page
-    from dashboard.triage_queue import render_triage_queue
-    from dashboard.rules_page import render_rules_page
-    from dashboard.io_connectors_page import render_io_connectors
-    from dashboard.pipeline_builder_page import render_pipeline_builder
-    from dashboard.benchmark_matrix_page import render_benchmark_matrix
-    from dashboards.yield_dashboard import render_yield_dashboard
-    from dashboard.governance_page import render_governance
-except Exception:
-    # Allow partial installs
-    render_model_packs_page = lambda: st.warning("Model Packs page missing.")
-    render_fleet_page = lambda: st.warning("Fleet page missing.")
-    render_triage_queue = lambda: st.warning("Triage Queue page missing.")
-    render_rules_page = lambda: st.warning("Rules page missing.")
-    render_io_connectors = lambda: st.warning("I/O Connectors page missing.")
-    render_pipeline_builder = lambda: st.warning("Pipeline Builder page missing.")
-    render_benchmark_matrix = lambda: st.warning("Benchmark Matrix page missing.")
-    render_yield_dashboard = lambda: st.warning("Yield Dashboard page missing.")
-    render_governance = lambda: st.warning("Governance page missing.")
+# New pages
+from dashboard.model_packs import render_model_packs_page
+from dashboard.fleet_page import render_fleet_page
+from dashboard.triage_queue import render_triage_queue
+from dashboard.rules_page import render_rules_page
+from dashboard.io_connectors_page import render_io_connectors
+from dashboard.pipeline_builder_page import render_pipeline_builder
+from dashboard.benchmark_matrix_page import render_benchmark_matrix
+from dashboards.yield_dashboard import render_yield_dashboard
+from dashboard.governance_page import render_governance
 
 st.set_page_config(page_title="Sintrones Edge AI Dashboard", layout="wide")
 st.title("🧠 Sintrones Edge AI Dashboard")
@@ -64,11 +52,9 @@ with tabs[3]:
     st.info("Configure RTSP/GigE/USB cameras and sync.")
 
 with tabs[4]:
-    # Log Viewer (no duplicate header)
-    if show_log_viewer:
-        show_log_viewer(show_title=True)
-    else:
-        st.warning("dashboard/log_viewer.py missing.")
+    st.subheader("📁 Anomaly Log Viewer")
+    if show_log_viewer: show_log_viewer()
+    else: st.warning("dashboard/log_viewer.py missing.")
 
 with tabs[5]:
     render_benchmark_matrix()
