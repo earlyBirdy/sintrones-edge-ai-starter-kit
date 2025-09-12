@@ -1,0 +1,29 @@
+{
+  "created": [
+    "fleet/__init__.py",
+    "bench/__init__.py",
+    "quality/__init__.py",
+    "rules/__init__.py",
+    "connectors/__init__.py",
+    "recipes/__init__.py"
+  ],
+  "modified": [
+    "orchestration/model_pack.py",
+    "dashboard/model_packs.py",
+    "fleet/fleet_registry.py",
+    "dashboard/fleet_page.py",
+    "bench/benchmark_matrix.py",
+    "dashboard/benchmark_matrix_page.py",
+    "quality/triage.py",
+    "dashboard/triage_queue.py",
+    "rules/rules_engine.py",
+    "dashboard/rules_page.py",
+    "data_traceability/traceability_indexer.py",
+    "dashboard/traceability_page.py",
+    "dashboards/yield_dashboard.py",
+    "dashboard/pipeline_builder_page.py",
+    "dashboard/io_connectors_page.py",
+    "dashboard/governance_page.py",
+    "app.py"
+  ]
+}

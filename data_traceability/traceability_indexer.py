@@ -29,15 +29,16 @@ def build_trace_index(log_root="logs") -> pd.DataFrame:
             if p.lower().endswith((".jpg",".jpeg",".png",".bmp",".tif",".tiff")):
                 side=os.path.splitext(p)[0]+".json"; meta=_safe_load_json(side) if os.path.exists(side) else {}
                 rows.append({"ts":meta.get("timestamp"),"unit_id":meta.get("unit_id"),"station_id":meta.get("station_id"),
-                             "camera_id":meta.get("camera_id"),"model":meta.get("model"),"model_version":meta.get("model_version"),
-                             "result":meta.get("result","PREDICT"),"score":meta.get("score"),"label":meta.get("label"),
+                             "shift":meta.get("shift"),"vendor":meta.get("vendor"),"camera_id":meta.get("camera_id"),
+                             "model":meta.get("model"),"model_version":meta.get("model_version"),
+                             "result":meta.get("result","PREDICT"),"defect":meta.get("defect"),"score":meta.get("score"),"label":meta.get("label"),
                              "artifact_path":p.replace('\\','/'),"artifact_sha256":_hash_file(p),"source":rel})
     if not rows:
-        return pd.DataFrame(columns=["ts","unit_id","station_id","shift","camera_id","model","model_version","result","score","label","artifact_path","artifact_sha256","source"])
+        return pd.DataFrame(columns=["ts","unit_id","station_id","shift","vendor","camera_id","model","model_version","result","defect","score","label","artifact_path","artifact_sha256","source"])
     df=pd.DataFrame(rows)
     def _parse_ts(x):
         if x is None: return None
-        try: return datetime.fromisoformat(x.replace("Z","+00:00"))
+        try: return datetime.fromisoformat(str(x).replace("Z","+00:00"))
         except Exception: return None
     df["parsed_ts"]=df["ts"].apply(_parse_ts) if "ts" in df.columns else None
     df["day"]=df["parsed_ts"].dt.date if "parsed_ts" in df.columns and df["parsed_ts"].notna().any() else None
