@@ -1,6 +1,7 @@
 # 🔧 Installation Guide – Sintrones Edge AI Starter Kit
 
-This guide walks you through setting up your environment and running the Sintrones Edge AI Starter Kit.
+This guide walks you through setting up your environment and running the Sintrones Edge AI Starter Kit. This project ships a **pre‑wired Streamlit dashboard** for an Edge AI Vision Inspection starter kit with **17 tabs**. It includes Model Packs, Fleet, Benchmark Matrix, Data Traceability, Triage → Rules, Yield & Quality, Pipeline Builder,
+I/O Connectors, Governance, and more.
 
 ## 1. System Requirements
 
@@ -9,6 +10,7 @@ This guide walks you through setting up your environment and running the Sintron
 - OS: Ubuntu 20.04+, macOS, or Windows WSL2
 - Optional: GPU (for ONNX/OpenVINO inference)
 - MQTT broker (e.g., Mosquitto for local test)
+- (Optional) Git, DVC, Git‑LFS for data governance
 
 ## 2. Clone the Repository
 

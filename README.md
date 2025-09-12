@@ -136,20 +136,28 @@ This Edge AI Starter Kit stands out with:
 
 ---
 
-  ## 📊 Dashboard Tabs Overview
+## 📊 Dashboard Tabs Overview
 
-  | Tab | Description |
-  |-----|-------------|
-  | 🏁 Quick Start         | Overview of capabilities |
-  | 📂 Examples            | Launch sample scripts |
-  | 🧠 Train Model         | Start training from dataset |
-  | 🔍 Inference           | Predict outcomes and log them |
-  | 🎥 Multi-Camera        | Simulate multiple camera inputs |
-  | 🧩 Explainability      | Generate saliency maps |
-  | 📜 Logs                | Traceability and inspection history |
-  | 🛠️ Fine-Tuning UI     | Label and fine-tune with few-shot input |
-  | 📈 Benchmark Panel     | ONNX/PyTorch runtime testing |
-  | ❤️ Health Check       | Verify system and dependency health |
+A production‑minded **Edge AI Vision** dashboard built with Streamlit. It includes **17 tabs** spanning model lifecycle,
+fleet operations, MLOps dashboards, and production I/O, aligning with best practices seen in commercial platforms.
+
+1. **🏁 Quick Start** – overview & links
+2. **📦 Model Packs** – import, validate, smoke test, auto‑engine select, persist Benchmark results, deploy/rollback
+3. **🛰️ Fleet** – device table, heartbeat, set active pack, raise alarms
+4. **📊 Benchmark Matrix** – sizes × engines (ONNX Runtime, OpenVINO, TensorRT), persist to modelpack
+5. **🔍 Inference** – placeholder to wire your runtime (ai_workflow/inference_kit.py)
+6. **📷 Multi‑Cam Feeds** – placeholder for USB/RTSP/GigE
+7. **📁 Log Viewer** – existing viewer; shows anomalies and logs (if present)
+8. **📜 Data Traceability** – unit‑level index (serial, station, shift, vendor, model@version, result, defect)
+9. **🧰 Triage Queue** – review anomalies, label, notes; **Promote → Rule**
+10. **✅ Inspection Rules** – YAML rules (`recipes/rules/*.yaml`) with ROI/threshold
+11. **📈 Yield & Quality** – KPIs (Yield %, DPPM), daily trend, defect Pareto; slice by station/shift/vendor/version
+12. **🧱 Pipeline Builder** – export `recipes/pipeline.yaml` (pre→model→post→rules→outputs)
+13. **⚙️ I/O Connectors** – configure Cameras + OPC‑UA/Modbus/MQTT; simulate PASS/FAIL → `logs/events.jsonl`
+14. **🔐 Governance** – show lineage (metrics/benchmarks/train data commit), SHA‑256 for artifacts, write `SIGNATURES.json`
+15. **🛠️ Few‑Shot Fine‑Tuning** – placeholder UI for rapid adapt
+16. **🧪 Health Check** – placeholder for dependency/system checks
+17. **📂 Examples** – list sample scripts
 
 ---
 
@@ -157,6 +165,7 @@ This Edge AI Starter Kit stands out with:
 
 ```
 sintrones-edge-ai-starter-kit/
+├── app.py                   # Streamlit dashboard (main app)
 ├── agents/                  # Modular agents (system recovery, anomaly handlers, OTA)
 │   ├── __init__.py
 │   └── ...
@@ -165,15 +174,19 @@ sintrones-edge-ai-starter-kit/
 ├── anomaly/                 # Anomaly detection scripts (e.g., PaDiM)
 ├── app/                     # Original backend app - Core dashboard + logic
 │   └── main.py
+├── bench/                   # Benchmark Matrix logic
 ├── clustering/              # RCA via image clustering
 ├── configs/                 # System & sensor configuration files (YAML)
 │   └─- config.yaml
+├── connectors/              # I/O connector config
 ├── dashboard/               # Classic Streamlit UIs (fine-tune, benchmark)
-│   ├── app.py
 │   └── components/
+├── dashboards/              # Analytics pages (Yield & Quality, etc.)
 ├── data/                    # Sample logs and inference results
 │   ├── sample_logs/
 │   └── demo_inputs/
+├── data_traceability/       # Trace indexer
+├── deployments/             # active deployments by device
 ├─- dist/                    # Auto-generated configs and release notes
 ├── docker/                  # Dockerfile + docker-compose.yml
 ├── docs/                    # Docs, Wiring diagrams, ABOX-5220 architecture
@@ -181,9 +194,11 @@ sintrones-edge-ai-starter-kit/
 │   └─- AGENTS.md            # Documentation for AI Agents
 ├── examples/                # Application-specific integration (vehicle, factory, city)
 │   └─ vision_inspection/...
+├── fleet/                   # Device registry
 ├── logger/                  # Frame logger, anomaly image storage, sync utils
 │   └── frame_logger.py
-├── lowcode_ui/              # Unified Streamlit dashboard (main app)
+├── logs/                    # events.jsonl, anomalies/, pass/, fail/
+├── model_packs/             # your packs (modelpack.yaml + artifacts/)
 ├── models/                  # ONNX models and retrained variants
 │   ├── base_model.onnx
 │   └─- defect_detector.onnx
@@ -194,7 +209,11 @@ sintrones-edge-ai-starter-kit/
 │   ├── fine_tune/
 │   ├── runtime_benchmark/
 │   └── visual_qa/
+├── orchestration/           # Model Pack logic (validate/smoke/deploy)
 ├── ota/                     # OTA update agent and JSON control
+├── quality/                 # Triage queue builder
+├── recipes/                 # pipeline.yaml + rules/
+├── rules/                   # Rules engine; YAML under recipes/rules/
 ├── sensor_drivers/          # CANbus, Modbus, GPIO, MQTT handlers
 ├─- src/                     # AI agents and CLI tools
 │   ├─- agents/              # AI Agents (system recovery, adapter autogen, release agent)
@@ -238,6 +257,61 @@ sintrones-edge-ai-starter-kit/
    streamlit run app.py
 
    ```
+   
+---
+
+## Data conventions
+   - **Events:** `logs/events.jsonl` (one JSON per line; includes `ts`, `unit_id`, `result`, `station_id`, …)
+   - **Images:** `logs/anomalies|pass|fail|samples/*.jpg(.json)` where sidecar JSON includes metadata:
+     ```json
+     {
+       "timestamp": "2025-09-10T08:00:00",
+       "unit_id": "U-0001",
+       "station_id": "ST01",
+       "shift": "A",
+       "vendor": "V1",
+       "camera_id": "cam-1",
+       "model": "defect-detector",
+       "model_version": "1.2.0",
+       "result": "FAIL",
+       "defect": "scratch",
+       "score": 0.91,
+       "label": "NG-scratch"
+     }
+     ```
+
+## Model Pack schema (minimum)
+   `model_packs/<name>/<version>/modelpack.yaml`
+   ```yaml
+   model_id: defect-detector
+   version: 1.2.0
+   artifacts:
+     onnx: artifacts/model.onnx
+   # optional: runtime preference and benchmarks
+   runtime:
+     preferred: onnxruntime
+   benchmarks:
+     "2025-09-12":
+       onnxruntime: {fps: 30.0, latency_ms: 33.0, size: "640"}
+   pipeline: recipes/pipeline.yaml  # optional; produced by Pipeline Builder
+   metrics:
+     f1: 0.82
+   train:
+     data_commit: 25c1f3...   # if using DVC/Git-LFS
+   ```
+
+## Typical workflow
+   1. Build a **pipeline** in **🧱 Pipeline Builder** → saves `recipes/pipeline.yaml`
+   2. Package a **Model Pack** (`modelpack.yaml` + artifacts + tests)
+   3. **📊 Benchmark Matrix** → persist best runtime/size results to your pack
+   4. **📦 Model Packs** → Validate & Smoke Test → Deploy to device
+   5. Integrate cameras + PLC/MES in **⚙️ I/O Connectors** (simulate to start)
+   6. Use **📜 Data Traceability** to verify records flow in
+   7. Triage anomalies in **🧰 Triage Queue**, then **✅ Promote → Rule**
+   8. Track **📈 Yield & Quality** improvements after each change
+   9. Sign artifacts & review lineage in **🔐 Governance**
+
+---
 
 ## Vision Inspection Camera Publisher
 
@@ -464,6 +538,12 @@ The test workflow includes:
 - Full pytest run on `/tests`
 
 See `.github/workflows/python-ci.yml` for the CI config.
+
+---
+
+## FAQ
+- **Why does the Log Viewer show nothing?** Populate `logs/anomalies/` or use the I/O simulator to create events.
+- **How do I add OpenVINO/TensorRT?** Wire your runtime inside your inference code; the **Benchmark Matrix** and **Model Packs** UIs will persist results/selection.
 
 ---
 
