@@ -1,6 +1,10 @@
-import streamlit as st
+import streamlit as st, pandas as pd
 from rules.rules_engine import list_rules
 
 def render_rules_page():
     st.subheader("✅ Inspection Rules")
-    st.dataframe(list_rules(), use_container_width=True)
+    rules = list_rules()
+    if rules:
+        st.dataframe(pd.DataFrame(rules), width='stretch')
+    else:
+        st.info("No rules found. Promote some from the Triage Queue.")
