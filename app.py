@@ -84,18 +84,15 @@ tabs = st.tabs([
     "⚙️ I/O Connectors", "🔐 Governance", "🛠️ Few-Shot Fine-Tuning", "🧪 Health Check", "📂 Examples"
 ])
 
+
+
 with tabs[0]:
     st.subheader("🏁 Quick Start")
     st.write("AI-first layout: Model Packs → Fleet → Benchmark → Traceability → Triage → Rules → Yield.")
 
-with tabs[1]:
-    render_model_packs_page()
-
-with tabs[2]:
-    render_fleet_page()
-
-with tabs[3]:
-    render_benchmark_matrix()
+with tabs[1]: render_model_packs_page()
+with tabs[2]: render_fleet_page()
+with tabs[3]: render_benchmark_matrix()
 
 with tabs[4]:
     st.subheader("🔍 Inference")
@@ -106,64 +103,30 @@ with tabs[5]:
     st.info("Configure RTSP/GigE/USB cameras and sync.")
 
 with tabs[6]:
-    # Log Viewer (render exactly one header)
     if show_log_viewer:
         try:
             show_log_viewer(show_title=True)
         except TypeError:
-            st.subheader("📁 Anomaly Log Viewer")
-            show_log_viewer()
+            st.subheader("📁 Anomaly Log Viewer"); show_log_viewer()
     else:
         st.warning("dashboard/log_viewer.py missing.")
 
-with tabs[7]:
-    render_traceability_page()
-
-with tabs[8]:
-    render_triage_queue()
-
-with tabs[9]:
-    render_rules_page()
-
-with tabs[10]:
-    render_yield_dashboard()
-
-with tabs[11]:
-    render_pipeline_builder()
-
-with tabs[12]:
-    render_io_connectors()
-
-with tabs[13]:
-    render_governance()
+with tabs[7]: render_traceability_page()
+with tabs[8]: render_triage_queue()
+with tabs[9]: render_rules_page()
+with tabs[10]: render_yield_dashboard()
+with tabs[11]: render_pipeline_builder()
+with tabs[12]: render_io_connectors()
+with tabs[13]: render_governance()
 
 with tabs[14]:
     st.subheader("🛠️ Few-Shot Fine-Tuning")
     st.info("Upload a few images, label, and export a delta for ONNX update.")
 
 with tabs[15]:
-    st.subheader("🧪 System Health Check")
-    if st.button("Run Healthcheck"):
-        script = os.path.join(ROOT_DIR, "tools", "healthcheck.py")
-        if os.path.exists(script):
-            try:
-                out = subprocess.check_output([sys.executable, script], cwd=ROOT_DIR, stderr=subprocess.STDOUT, text=True)
-                st.code(out, language="json")
-            except subprocess.CalledProcessError as e:
-                st.error("Healthcheck failed:")
-                st.code(e.output)
-        else:
-            st.warning("tools/healthcheck.py not found.")
+    st.subheader("🧪 Health Check")
+    st.info("Run system and dependency checks here.")
 
 with tabs[16]:
     st.subheader("📂 Examples")
-    examples = []
-    for r, _, fs in os.walk(os.path.join(ROOT_DIR, "examples")):
-        for f in fs:
-            if f.endswith(".py"):
-                examples.append(os.path.relpath(os.path.join(r, f), ROOT_DIR))
-    if examples:
-        for e in sorted(examples):
-            st.code(f"python {e}")
-    else:
-        st.info("No examples found.")
+    st.write("Auto-list example scripts under ./examples/*.py")
