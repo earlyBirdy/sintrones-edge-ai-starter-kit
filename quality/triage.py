@@ -1,13 +1,6 @@
-import os, json, time
-def _score_from_name(name): return 0.9 if any(k in name.lower() for k in ["ng","defect"]) else 0.6
-def build_queue_from_anomalies(log_dir="logs/anomalies"):
-    items=[]
-    if os.path.isdir(log_dir):
-        for fn in sorted(os.listdir(log_dir))[-200:]:
-            if fn.lower().endswith((".jpg",".png",".jpeg")):
-                items.append({"id":fn,"path":os.path.join(log_dir,fn),"score":_score_from_name(fn),"ts":time.time(),"label":None,"notes":""})
-    items.sort(key=lambda r:(-r["score"], -r["ts"])); return items
-def save_queue(queue, path="logs/triage_queue.jsonl"):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path,"w") as f:
-        for r in queue: f.write(json.dumps(r)+"\n")
+from core.db import connect, migrate
+def add_triage_item(unit_id, score, defect_label, assignee=None, sla_hours=24, note=""):
+    con = connect(); migrate(con)
+    con.execute("""INSERT INTO events(ts, device_id, severity, type, message, meta_json)
+                   VALUES (datetime('now'), 'local', 'info', 'triage_add', ?, json(?))""",
+                (f"unit:{unit_id}", f'{{"score":{score},"label":"{defect_label}","assignee":"{assignee}","sla_h":{sla_hours},"note":"{note}"}}'))

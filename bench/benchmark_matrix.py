@@ -1,10 +1,10 @@
-import random
-def run_matrix(sizes=("320","480","640","960"), engines=("onnxruntime","openvino","tensorrt")):
-    rows=[]
-    for s in sizes:
-        for e in engines:
-            base={"onnxruntime":25,"openvino":32,"tensorrt":55}[e]
-            fps=max(5.0, base + (random.random()*6-3) - (int(s)/640)*5)
-            latency=max(5.0, 1000.0/max(1.0,fps))
-            rows.append({"engine":e,"size":s,"fps":round(fps,1),"latency_ms":round(latency,1)})
-    return rows
+from core.db import connect, migrate
+def record_benchmark(device_id, engine, input_hw, input_size, fps, latency_ms, accuracy, notes=""):
+    con = connect(); migrate(con)
+    con.execute("INSERT INTO benchmarks(ts, device_id, engine, input_hw, input_size, fps, latency_ms, accuracy, notes) VALUES (datetime('now'),?,?,?,?,?,?,?,?)",(device_id, engine, input_hw, input_size, fps, latency_ms, accuracy, notes))
+def best_engine(device_id, min_accuracy=0.0, max_latency_ms=1e9):
+    con = connect()
+    rows = con.execute("""SELECT engine, input_size, AVG(latency_ms) AS lat, AVG(accuracy) AS acc, AVG(fps) AS fps
+                          FROM benchmarks WHERE device_id=? GROUP BY engine, input_size
+                          HAVING acc >= ? AND lat <= ? ORDER BY lat ASC, acc DESC LIMIT 1""",(device_id, min_accuracy, max_latency_ms)).fetchone()
+    return dict(rows) if rows else None

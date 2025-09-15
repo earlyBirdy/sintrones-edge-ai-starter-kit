@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  edge-dashboard:
+    build: ./packaging
+    ports: ['8501:8501']
+    volumes: ['../data:/app/data']
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    ports: ['1883:1883']
+    restart: unless-stopped

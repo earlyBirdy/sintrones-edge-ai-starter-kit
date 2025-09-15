@@ -62,4 +62,25 @@ sudo apt install mosquitto mosquitto-clients
 docker run -it -p 1883:1883 eclipse-mosquitto
 ```
 
+# Install
+
+1) Create venv & install
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+2) Initialize SQLite
+```bash
+python scripts/init_sqlite.py
+```
+3) Run dashboard
+```bash
+streamlit run app.py
+```
+4) Optional: Docker
+```bash
+docker compose -f packaging/docker-compose.yml up --build
+```
+
+
 ✅ You're now running the fully integrated Edge AI dashboard!

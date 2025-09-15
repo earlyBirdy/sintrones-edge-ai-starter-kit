@@ -1,0 +1,14 @@
+PRAGMA journal_mode=WAL;
+PRAGMA foreign_keys=ON;
+CREATE TABLE IF NOT EXISTS devices (device_id TEXT PRIMARY KEY, hostname TEXT, hw TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS model_packs (pack_id TEXT, version TEXT, path TEXT, checksum TEXT, status TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (pack_id, version));
+CREATE TABLE IF NOT EXISTS deployments (device_id TEXT, pack_id TEXT, version TEXT, deployed_at TEXT, policy TEXT, status TEXT, note TEXT, PRIMARY KEY (device_id, deployed_at));
+CREATE TABLE IF NOT EXISTS sensor_readings (ts TEXT, device_id TEXT, sensor_id TEXT, metric TEXT, value REAL, unit TEXT, quality TEXT, raw_json TEXT, PRIMARY KEY (ts, device_id, sensor_id, metric));
+CREATE INDEX IF NOT EXISTS idx_sensor_t ON sensor_readings(ts);
+CREATE INDEX IF NOT EXISTS idx_sensor_dev ON sensor_readings(device_id, sensor_id);
+CREATE TABLE IF NOT EXISTS inspections (ts TEXT, device_id TEXT, station TEXT, shift TEXT, unit_id TEXT, result TEXT, score REAL, defect_label TEXT, image_path TEXT, crop_path TEXT, model_pack TEXT, model_ver TEXT, PRIMARY KEY (ts, device_id, unit_id));
+CREATE INDEX IF NOT EXISTS idx_insp_lookup ON inspections(unit_id, station, ts);
+CREATE TABLE IF NOT EXISTS benchmarks (ts TEXT, device_id TEXT, engine TEXT, input_hw TEXT, input_size TEXT, fps REAL, latency_ms REAL, accuracy REAL, notes TEXT);
+CREATE TABLE IF NOT EXISTS events (ts TEXT, device_id TEXT, severity TEXT, type TEXT, message TEXT, meta_json TEXT);
+CREATE TABLE IF NOT EXISTS lineage (ts TEXT, artifact TEXT, sha256 TEXT, source TEXT, anchor_ref TEXT, meta_json TEXT);
+CREATE TABLE IF NOT EXISTS changes (seq INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT CURRENT_TIMESTAMP, table_name TEXT, op TEXT, pk TEXT, row_json TEXT, sent INTEGER DEFAULT 0);
