@@ -27,3 +27,7 @@ coverage/
 build/
 dist/
 *.egg-info/
+
+exports/
+*.csv
+*.json
