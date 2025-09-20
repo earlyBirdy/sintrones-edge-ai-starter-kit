@@ -89,6 +89,66 @@ from probes.e2e_check import CHECKS, _conn  # reuse check registry and DB connec
 # MES exporter (schema-aware)
 from probes.mes_exporter import run_export
 
+
+# === Injected by ChatGPT: dashboard dispatch wiring ===
+from dashboard.log_viewer import show_log_viewer
+from dashboard.benchmark_matrix_page import render_benchmark_matrix
+from dashboard.tabs.yield_quality_sqlite import render_yield_quality_sqlite
+from dashboard.model_packs import render_model_packs_page
+from dashboard.tabs.fleet_sqlite import render_fleet_sqlite
+from dashboard.rules_page import render_rules_page
+from dashboard.pipeline_builder_page import render_pipeline_builder
+from dashboard.io_connectors_page import render_io_connectors
+from dashboard.triage_queue import render_triage_queue
+from dashboard.governance_page import render_governance
+from dashboard.status_panel import show_status_panel
+from dashboard.tabs.traceability_sqlite import render_traceability_sqlite
+
+def _placeholder(msg: str):
+    import streamlit as st
+    st.info(msg)
+
+DISPATCH = {
+    "🏁 Quick Start": lambda: show_status_panel(),
+    "🔍 Inference":  lambda: _placeholder("Inference UI not wired yet. See ai_workflow/inference_kit.py"),
+    "🎥 Live Camera Feed": lambda: _placeholder("Live camera demo not wired. See examples/vision_inspection/camera_infer.py"),
+    "📷 Multi-Cam Feeds": lambda: _placeholder("Multi-cam streamer not wired. See multi_camera_support/multi_cam_streamer.py"),
+    "📁 Log Viewer": lambda: show_log_viewer(),
+    "📊 Benchmark Matrix": lambda: render_benchmark_matrix(),
+    "📈 Yield & Quality": lambda: render_yield_quality_sqlite(),
+    "📦 Model Packs": lambda: render_model_packs_page(),
+    "🛰️ Fleet": lambda: render_fleet_sqlite(),
+    "✅ Inspection Rules": lambda: render_rules_page(),
+    "🧱 Pipeline Builder": lambda: render_pipeline_builder(),
+    "⚙️ I/O Connectors": lambda: render_io_connectors(),
+    "🧰 Triage Queue": lambda: render_triage_queue(),
+    "🔐 Governance": lambda: render_governance(),
+    "🛠️ Few-Shot Fine-Tuning": lambda: _placeholder("Few-shot finetune UI not wired. See dashboard/fine_tune_ui.py"),
+    "🧪 Health Check": lambda: show_status_panel(),
+    "📂 Examples": lambda: _placeholder("Examples under examples/… — copy relevant demo into a tab to enable"),
+    "📇 Data Traceability": lambda: render_traceability_sqlite(),
+    # "📤 MES Export" -> handled inline in app.py
+}
+# === end injection ===
+
+# === Injected by ChatGPT: helper to render a tab by title ===
+def _render_tab_by_title(title: str):
+    import streamlit as st
+    if title == "📤 MES Export":
+        try:
+            render_mes_export_ui_here()
+        except Exception:
+            st.info("MES Export UI not found in this build.")
+        return
+    fn = DISPATCH.get(title)
+    if fn:
+        fn()
+    else:
+        st.info("No renderer registered for this tab yet.")
+# === end injection ===
+
+
+
 # ------------------------------------------------------------
 # App config
 # ------------------------------------------------------------
