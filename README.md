@@ -61,7 +61,7 @@ Use it as a base to build your own PoC, integrate with IIoT, or contribute modul
 17. 🧪 Health Check
 18. 📂 Examples
 19. 📤 MES Export
-## 🗺️ Dashboard Tabs (17)
+## 🗺️ Dashboard Tabs (19)
 > The three **SQL‑backed** tabs read from `data/edge.db`. The Log Viewer is a simple stub; most analytics live in the SQL pages.
 ---
 Dashboard Tabs
