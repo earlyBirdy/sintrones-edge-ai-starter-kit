@@ -68,7 +68,7 @@ Dashboard Tabs
 **SQL‑backed analytics**
 **Ops, lifecycle & dev**
 **Capture & monitoring**
-> Tabs render fully when their inputs/resources exist (DB rows, config files, folders). Placeholders are shown otherwise. fileciteturn1file0
+> Tabs render fully when their inputs/resources exist (DB rows, config files, folders). Placeholders are shown otherwise.
 ## 🧱 Project Structure (consolidated)
 Project Structure (consolidated)
 ```
