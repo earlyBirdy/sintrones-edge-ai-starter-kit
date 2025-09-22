@@ -26,6 +26,48 @@ Use it as a base to build your own PoC, integrate with IIoT, or contribute modul
 
 ---
 
+## 🆓 vs 💼 Commercial Version
+
+| Feature                                | Open-Source Starter Kit | Commercial Offering |
+|----------------------------------------|--------------------------|---------------------|
+| Real-time AI Inference (YOLO, etc.)    | ✅ Yes                   | ✅ Yes              |
+| Dashboard UI (Streamlit/Grafana)       | ✅ Yes                   | ✅ Yes              |
+| OTA Agent                              | ✅ Yes                   | ✅ Enhanced         |
+| Health Monitoring                      | ✅ CLI Tool              | ✅ Web Dashboard    |
+| AI Agent Automation (Recovery, Adapter)| ✅ Yes                   | ✅ Advanced         |
+| Odoo / Cloud / AWS Integration         | 🟡 Manual                | ✅ Plug-in Ready    |
+| Hardware Acceleration Support          | 🟡 Generic               | ✅ Tuned Drivers    |
+| Long-term Support + SLA                | ❌                       | ✅ Yes              |
+| Turnkey Packaging (VM/Image)           | ❌                       | ✅ Yes              |
+
+---
+
+## 📦 Deployment Options
+
+| Mode             | Description                                  |
+|------------------|----------------------------------------------|
+| **Standalone**   | Fully offline, single‑box; dashboard & sensor integration |
+| **Edge-to-Cloud**| MQTT sync to MES/BI; CSV/Parquet export or other IoT platforms |
+| **Vehicle AI**   | Add GPS/CANbus for on-road deployments       |
+| **Containerized** | `docker compose -f packaging/docker-compose.yml up --build` |
+
+---
+
+## 🎯 Use Cases
+
+- 📦 **Smart Logistics** – Detect vehicles or goods, monitor temperature/vibration
+- 🏭 **Factory Automation** – Visual inspection + machine health monitoring
+- 🏙️ **Smart Cities** – Public space detection, traffic analytics, air quality
+
+---
+
+## 📚 Additional Resources
+
+- 📘 [Use Cases](/docs/USE_CASES.md): Real-world Edge AI applications in factories, vehicles, and smart cities  
+- 🤝 [Contributing Guide](/docs/CONTRIBUTING.md): How to get involved and contribute to this project
+
+---
+
 ## ✅ New Features
 - **SQLite backbone** for on‑device metadata (devices, deployments, inspections, benchmarks, events, lineage) — default DB path **`data/edgekit.db`** (some builds use `data/edge.db`; both are supported).
 - **SQL‑backed tabs**: **📇 Data Traceability**, **📈 Yield & Quality**, **🛰️ Fleet**.
