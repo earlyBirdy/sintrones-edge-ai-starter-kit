@@ -84,25 +84,25 @@ Use it as a base to build your own PoC, integrate with IIoT, or contribute modul
 ---
 
 ## 🗺️ Dashboard Tabs
-1. 🏁 Quick Start
-2. 📦 Model Packs
-3. 🛰️ Fleet (SQL)
-4. 📊 Benchmark Matrix
-5. 🔍 Inference
-6. 📷 Multi‑Cam Feeds
-7. 🎥 Live Camera Feed
-8. 📁 Log Viewer
-9. 📇 Data Traceability (SQL)
-10. 🧰 Triage Queue
-11. ✅ Inspection Rules
-12. 📈 Yield & Quality (SQL)
-13. 🧱 Pipeline Builder
-14. ⚙️ I/O Connectors
-15. 🔐 Governance
-16. 🛠️ Few‑Shot Fine‑Tuning
-17. 🧪 Health Check
-18. 📂 Examples
-19. 📤 MES Export
+1. 🏁 **Quick Start** — KPIs + latest inspections & events
+2. 🔍 **Inference** — recent inference rows (schema‑adaptive)
+3. 🎥 **Live Camera Feed** — lists endpoints from `config/cameras.yaml`
+4. 📷 **Multi‑Cam Feeds** — 3‑column camera grid
+5. 📁 **Log Viewer** — lookback filter; CSV/table; tail preview; download
+6. 📊 **Benchmark Matrix** — best runtime/size persisted to DB
+7. 📈 **Yield & Quality** — PASS/FAIL, Pareto, trend (SQL)
+8. 📦 **Model Packs** — versioned packs, hooks, policies
+9. 🛰️ **Fleet** — devices, deployments, events (SQL)
+10. ✅ **Inspection Rules** — thresholds & rule sets
+11. 🧱 **Pipeline Builder** — pre→model→post→rules→outputs
+12. ⚙️ **I/O Connectors** — files, MQTT/MES stubs
+13. 🧰 **Triage Queue** — anomalies → labeling → promote to rule
+14. 🔐 **Governance** — policy, export guardrails
+15. 🛠️ **Few‑Shot Fine‑Tuning** — list examples & spec
+16. 🧪 **Health Check** — table existence/counts; filesystem checks
+17. 📂 **Examples** — downloadable artifacts
+18. 📇 **Data Traceability** — unit‑level lineage (SQL / compat view)
+19. 📤 **MES Export** — `mes_latest.csv` export helper
 ## 🗺️ Dashboard Tabs (19)
 > The three **SQL‑backed** tabs read from `data/edge.db`. The Log Viewer is a simple stub; most analytics live in the SQL pages.
 ---
@@ -201,17 +201,28 @@ train: {data_commit: 25c1f3...}  # if using DVC/Git-LFS
 
 ---
 
-## 🧪 Automated Testing & CI
+## 🧰 Tooling & Utilities
+- `e2e_bootstrap_pipeline_v31.py` — deterministic seeding for demos
+- `tab_health_probe.py` — prints readiness of tables/folders for each tab
+- `fix_streamlit_width_api.py` — repo‑wide Streamlit width migration
+- `apply_ui_tweaks_env_footer.py` — remove/move the “Environment” panel
+- `compat_views.sql` — safe views powering Inference & Traceability
+
+---
+
+## 🧪 Testing & CI
 ```bash
 pytest tests/
 ```
-- Logger tests; OTA model switch; agents coverage.
-- GitHub Actions (`.github/workflows/`) is scaffolded for releases/validation.
+- Agents, OTA model switch, loggers, schema adapters.
+- GitHub Actions scaffolded in `.github/workflows/*`.
 
 ---
 
 ## 📚 Additional Resources
-- docs/LEGACY_MIGRATION.md — old → new paths & commands (optional helper)
+- docs/USE_CASES.md — real‑world factory/vehicle/city use cases
+- docs/CONTRIBUTING.md — contribution workflow
+- docs/LEGACY_MIGRATION.md — old → new paths & commands
 
 ---
 
