@@ -1,80 +1,126 @@
-# dashboard/log_viewer.py
-# Minimal file-based Log Viewer: ONLY scans ./logs for files, lists them, and previews the selected file.
-import os
-from pathlib import Path
 import streamlit as st
 import pandas as pd
-import json
+from pathlib import Path
+from datetime import datetime, timedelta
 
-LOGS_DIR = Path.cwd() / "logs"
-PATTERNS = ["*.csv", "*.log", "*.jsonl"]  # restrict types under /logs
+LOG_ROOT = Path("logs")
 
-def _discover_logs():
-    if not LOGS_DIR.exists():
+def _iter_files(root: Path, include_subdirs: bool):
+    if not root.exists():
         return []
-    files = []
-    for pat in PATTERNS:
-        files += sorted(LOGS_DIR.rglob(pat), key=lambda p: p.as_posix())
-    return files
+    if include_subdirs:
+        return [p for p in root.rglob("*") if p.is_file()]
+    return [p for p in root.iterdir() if p.is_file()]
 
-def _load_any(path: Path) -> pd.DataFrame:
-    suffix = path.suffix.lower()
-    if suffix == ".csv":
-        return pd.read_csv(path)
-    if suffix == ".jsonl":
-        rows = []
-        with path.open("r", encoding="utf-8", errors="ignore") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    rows.append(json.loads(line))
-                except Exception:
-                    rows.append({"raw": line})
-        return pd.DataFrame(rows)
-    # .log or others -> try CSV first, else raw text as single column
+def _human(n):
+    if n < 1024: return f"{n} B"
+    kb = n/1024
+    if kb < 1024: return f"{kb:.1f} KB"
+    mb = kb/1024
+    return f"{mb:.1f} MB"
+
+def _is_header_only_csv(p: Path) -> bool:
     try:
-        return pd.read_csv(path)
+        with p.open("r", encoding="utf-8", errors="ignore") as f:
+            head = [next(f, "").strip() for _ in range(3)]
+        # header-only if first line has commas and next non-empty line doesn't exist
+        non_empty = [ln for ln in head[1:] if ln]
+        return ("," in (head[0] or "")) and (len(non_empty) == 0)
     except Exception:
-        return pd.DataFrame({"line": path.read_text(encoding="utf-8", errors="ignore").splitlines()})
+        return False
+
+def _default_file_choice(paths: list[Path]) -> Path|None:
+    # Prefer something informative if the first is a header-only CSV
+    # Scoring preference: .log > .jsonl > non-header-only .csv > others
+    def score(p: Path):
+        if p.suffix == ".log": return 0
+        if p.suffix == ".jsonl": return 1
+        if p.suffix == ".csv": return 2 if not _is_header_only_csv(p) else 5
+        return 4
+    if not paths: return None
+    return sorted(paths, key=score)[0]
 
 def render_log_viewer():
-    st.subheader("✅ Anomaly Log Viewer")
-    st.caption("Showing files from ./logs")
+    st.title("📁 Log Viewer")
+    st.caption("Browse files under `./logs` with a lookback filter.")
 
-    logs = _discover_logs()
-    if not logs:
-        st.info("No log files found under ./logs. Put .csv / .log / .jsonl files there.")
+    if not LOG_ROOT.exists():
+        st.warning("`logs/` folder not found. Create it or run the bootstrap to generate samples.")
         return
 
-    # Prefer a file named like '*anomaly*.csv' if available
-    default_idx = 0
-    for i, p in enumerate(logs):
-        if "anomaly" in p.name.lower() and p.suffix.lower() == ".csv":
-            default_idx = i
-            break
+    with st.expander("Filters"):
+        hours = st.slider("Lookback hours", 1, 168, 24, 1)
+        exts = st.multiselect("Extensions", [".log",".jsonl",".csv",".txt"], [".log",".jsonl",".csv",".txt"])
+        q = st.text_input("Filename contains", "")
+        show_subdirs = st.checkbox("Include subdirectories", True)
+        preview_rows = st.slider("Preview last N lines (jsonl/txt/log)", 0, 500, 50, 10)
 
-    choice = st.selectbox("Select a log file", [str(p.relative_to(Path.cwd())) for p in logs], index=default_idx)
-    path = Path.cwd() / choice
+    cutoff = datetime.now() - timedelta(hours=hours)
+    paths = []
+    for p in _iter_files(LOG_ROOT, show_subdirs):
+        if exts and p.suffix not in exts: continue
+        if q and q.lower() not in p.name.lower(): continue
+        try:
+            stat = p.stat()
+        except Exception:
+            continue
+        mtime = datetime.fromtimestamp(stat.st_mtime)
+        if mtime < cutoff: continue
+        paths.append(p)
 
-    try:
-        df = _load_any(path)
-    except Exception as e:
-        st.error(f"Failed to load {choice}: {e}")
+    # Build table
+    rows = [{
+        "name": p.name,
+        "size": _human(p.stat().st_size),
+        "modified": datetime.fromtimestamp(p.stat().st_mtime).isoformat(timespec="seconds"),
+        "path": p.as_posix()
+    } for p in paths]
+    df = pd.DataFrame(rows).sort_values("modified", ascending=False)
+    st.dataframe(df, width='stretch', height=360)
+
+    if df.empty:
+        st.info("No files match your filters.")
         return
 
-    # Friendly timestamp parsing if present
-    for col in ("timestamp", "ts", "time"):
-        if col in df.columns:
+    # Default selection avoids header-only CSV when possible
+    default_path = _default_file_choice(paths)
+    choices = [r["path"] for r in rows]
+    idx = choices.index(default_path.as_posix()) if default_path else 0
+    sel = st.selectbox("Select a file to preview / download", choices, index=idx)
+
+    if sel:
+        p = Path(sel)
+        st.download_button(f"Download {p.name}", data=p.read_bytes(), file_name=p.name)
+
+        # CSV: render as table (and skip header-only warning)
+        if p.suffix == ".csv":
             try:
-                df[col] = pd.to_datetime(df[col]).astype(str)
-            except Exception:
-                pass
+                dfc = pd.read_csv(p)
+                if dfc.empty:
+                    st.caption("CSV has headers but no rows yet — that’s why you saw only 'ts,severity,type,message'.")
+                else:
+                    st.dataframe(dfc, width='stretch', height=420)
+            except Exception as e:
+                st.error(f"CSV preview failed: {e}")
+            return
 
-    st.dataframe(df, use_container_width=True, height=480)
-    st.download_button("Download selected file", data=path.read_bytes(), file_name=path.name)
-
-# Back-compat entry point if app.py still uses old name
-def show_log_viewer():
-    render_log_viewer()
+        # Text-like preview
+        if preview_rows > 0 and p.suffix in {".jsonl",".log",".txt"}:
+            try:
+                with p.open("rb") as f:
+                    f.seek(0,2)
+                    end = f.tell()
+                    chunk = 4096
+                    data = b""
+                    count = 0
+                    pos = end
+                    while pos > 0 and count < preview_rows:
+                        read = min(chunk, pos)
+                        pos -= read
+                        f.seek(pos)
+                        data = f.read(read) + data
+                        count = data.count(b"\n")
+                    lines = data.splitlines()[-preview_rows:]
+                st.text("\n".join([ln.decode(errors="replace") for ln in lines]))
+            except Exception as e:
+                st.error(f"Preview failed: {e}")

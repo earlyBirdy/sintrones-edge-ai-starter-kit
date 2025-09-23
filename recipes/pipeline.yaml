@@ -1,0 +1,17 @@
+preprocess:
+  resize: 640
+  normalize: true
+  denoise: false
+model:
+  id: defect-detector
+  version: 1.2.0
+  runtime: auto
+  confidence: 0.5
+postprocess:
+  nms: true
+  topk: 100
+rules:
+  attach_repo_rules: true
+outputs:
+  emit_pass_fail: true
+  save_artifacts: true

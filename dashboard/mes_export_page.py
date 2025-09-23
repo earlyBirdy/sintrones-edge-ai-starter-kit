@@ -12,5 +12,5 @@ def render_mes_export():
     except Exception as e:
         st.error(f"Failed to read {csv}: {e}")
         return
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(df, width='stretch')
     st.download_button("Download CSV", csv.read_bytes(), file_name=csv.name)
