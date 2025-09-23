@@ -91,7 +91,7 @@ from probes.mes_exporter import run_export
 
 
 # === Injected by ChatGPT: dashboard dispatch wiring ===
-from dashboard.log_viewer import show_log_viewer
+from dashboard.log_viewer import render_log_viewer
 from dashboard.benchmark_matrix_page import render_benchmark_matrix
 from dashboard.tabs.yield_quality_sqlite import render_yield_quality_sqlite
 from dashboard.model_packs import render_model_packs_page
@@ -103,31 +103,40 @@ from dashboard.triage_queue import render_triage_queue
 from dashboard.governance_page import render_governance
 from dashboard.status_panel import show_status_panel
 from dashboard.tabs.traceability_sqlite import render_traceability_sqlite
+from dashboard.quick_start import render_quick_start
+from dashboard.inference_page import render_inference
+from dashboard.live_camera import render_live_camera
+from dashboard.multi_cam import render_multi_cam
+from dashboard.fewshot_finetune import render_fewshot
+from dashboard.health_check import render_health_check
+from dashboard.examples_page import render_examples
+from dashboard.mes_export_page import render_mes_export
+
 
 def _placeholder(msg: str):
     import streamlit as st
     st.info(msg)
 
 DISPATCH = {
-    "🏁 Quick Start": lambda: show_status_panel(),
-    "🔍 Inference":  lambda: _placeholder("Inference UI not wired yet. See ai_workflow/inference_kit.py"),
-    "🎥 Live Camera Feed": lambda: _placeholder("Live camera demo not wired. See examples/vision_inspection/camera_infer.py"),
-    "📷 Multi-Cam Feeds": lambda: _placeholder("Multi-cam streamer not wired. See multi_camera_support/multi_cam_streamer.py"),
-    "📁 Log Viewer": lambda: show_log_viewer(),
-    "📊 Benchmark Matrix": lambda: render_benchmark_matrix(),
-    "📈 Yield & Quality": lambda: render_yield_quality_sqlite(),
-    "📦 Model Packs": lambda: render_model_packs_page(),
-    "🛰️ Fleet": lambda: render_fleet_sqlite(),
-    "✅ Inspection Rules": lambda: render_rules_page(),
-    "🧱 Pipeline Builder": lambda: render_pipeline_builder(),
-    "⚙️ I/O Connectors": lambda: render_io_connectors(),
-    "🧰 Triage Queue": lambda: render_triage_queue(),
-    "🔐 Governance": lambda: render_governance(),
-    "🛠️ Few-Shot Fine-Tuning": lambda: _placeholder("Few-shot finetune UI not wired. See dashboard/fine_tune_ui.py"),
-    "🧪 Health Check": lambda: show_status_panel(),
-    "📂 Examples": lambda: _placeholder("Examples under examples/… — copy relevant demo into a tab to enable"),
-    "📇 Data Traceability": lambda: render_traceability_sqlite(),
-    # "📤 MES Export" -> handled inline in app.py
+    "🏁 Quick Start": render_quick_start,
+    "🔍 Inference": render_inference,
+    "🎥 Live Camera Feed": render_live_camera,
+    "📷 Multi-Cam Feeds": render_multi_cam,
+    "📁 Log Viewer": render_log_viewer,
+    "📊 Benchmark Matrix": render_benchmark_matrix,
+    "📈 Yield & Quality": render_yield_quality_sqlite,
+    "📦 Model Packs": render_model_packs_page,
+    "🛰️ Fleet": render_fleet_sqlite,
+    "✅ Inspection Rules": render_rules_page,
+    "🧱 Pipeline Builder": render_pipeline_builder,
+    "⚙️ I/O Connectors": render_io_connectors,
+    "🧰 Triage Queue": render_triage_queue,
+    "🔐 Governance": render_governance,
+    "🛠️ Few-Shot Fine-Tuning": render_fewshot,
+    "🧪 Health Check": render_health_check,
+    "📂 Examples": render_examples,
+    "📇 Data Traceability": render_traceability_sqlite,
+    "📤 MES Export": render_mes_export
 }
 # === end injection ===
 
@@ -267,15 +276,15 @@ def render_module(title: str):
     st.write(msg)
 
     # Optional: convenience query preview from the TEMP view (for data tabs)
-    with st.expander("Peek v_trace_window (first 20 rows)"):
-        try:
-            with db() as con:
-                rows = con.execute("SELECT * FROM v_trace_window ORDER BY sr_ts DESC LIMIT 20").fetchall()
+# [peek_cleanup]     with st.expander("Peek v_trace_window (first 20 rows)"):
+# [peek_cleanup]         try:
+# [peek_cleanup]             with db() as con:
+# [peek_cleanup]                 rows = con.execute("SELECT * FROM v_trace_window ORDER BY sr_ts DESC LIMIT 20").fetchall()
                 # UPDATED: width='stretch' instead of use_container_width
-                st.dataframe([dict(r) for r in rows], width='stretch')
-        except Exception as e:
-            st.warning(f"Preview unavailable: {e}")
-
+# [peek_cleanup]                 st.dataframe([dict(r) for r in rows], width='stretch')
+# [peek_cleanup]         except Exception as e:
+# [peek_cleanup]             st.warning(f"Preview unavailable: {e}")
+# [peek_cleanup]
     # Convenience: self-heal button for file-driven checks (creates placeholders)
     if not ok and st.button("Attempt auto-fix (create placeholders)", key=f"fix_{title}"):
         try:

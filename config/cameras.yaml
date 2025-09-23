@@ -1,1 +1,3 @@
-# placeholder camera config
+cameras:
+  - id: cam0
+    url: rtsp://example

@@ -1,1 +1,3 @@
-# rules: []
+rules:
+  - name: default
+    threshold: 0.5

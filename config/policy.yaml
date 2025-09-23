@@ -1,2 +1,2 @@
-retention_days: 30
-roles: []
+governance:
+  allow_export: true
