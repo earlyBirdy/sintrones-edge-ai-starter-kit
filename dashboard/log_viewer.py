@@ -23,15 +23,12 @@ def _is_header_only_csv(p: Path) -> bool:
     try:
         with p.open("r", encoding="utf-8", errors="ignore") as f:
             head = [next(f, "").strip() for _ in range(3)]
-        # header-only if first line has commas and next non-empty line doesn't exist
         non_empty = [ln for ln in head[1:] if ln]
         return ("," in (head[0] or "")) and (len(non_empty) == 0)
     except Exception:
         return False
 
-def _default_file_choice(paths: list[Path]) -> Path|None:
-    # Prefer something informative if the first is a header-only CSV
-    # Scoring preference: .log > .jsonl > non-header-only .csv > others
+def _default_file_choice(paths):
     def score(p: Path):
         if p.suffix == ".log": return 0
         if p.suffix == ".jsonl": return 1
@@ -68,23 +65,24 @@ def render_log_viewer():
         if mtime < cutoff: continue
         paths.append(p)
 
-    # Build table
+    if not paths:
+        st.info("No files match your filters (try increasing lookback or enabling subdirectories).")
+        return
+
     rows = [{
         "name": p.name,
         "size": _human(p.stat().st_size),
         "modified": datetime.fromtimestamp(p.stat().st_mtime).isoformat(timespec="seconds"),
         "path": p.as_posix()
     } for p in paths]
-    df = pd.DataFrame(rows).sort_values("modified", ascending=False)
+
+    df = pd.DataFrame(rows)
+    if "modified" in df.columns:
+        df = df.sort_values("modified", ascending=False)
     st.dataframe(df, width='stretch', height=360)
 
-    if df.empty:
-        st.info("No files match your filters.")
-        return
-
-    # Default selection avoids header-only CSV when possible
     default_path = _default_file_choice(paths)
-    choices = [r["path"] for r in rows]
+    choices = df["path"].tolist()
     idx = choices.index(default_path.as_posix()) if default_path else 0
     sel = st.selectbox("Select a file to preview / download", choices, index=idx)
 
@@ -92,19 +90,17 @@ def render_log_viewer():
         p = Path(sel)
         st.download_button(f"Download {p.name}", data=p.read_bytes(), file_name=p.name)
 
-        # CSV: render as table (and skip header-only warning)
         if p.suffix == ".csv":
             try:
                 dfc = pd.read_csv(p)
                 if dfc.empty:
-                    st.caption("CSV has headers but no rows yet — that’s why you saw only 'ts,severity,type,message'.")
+                    st.caption("CSV has headers but no rows yet.")
                 else:
                     st.dataframe(dfc, width='stretch', height=420)
             except Exception as e:
                 st.error(f"CSV preview failed: {e}")
             return
 
-        # Text-like preview
         if preview_rows > 0 and p.suffix in {".jsonl",".log",".txt"}:
             try:
                 with p.open("rb") as f:
